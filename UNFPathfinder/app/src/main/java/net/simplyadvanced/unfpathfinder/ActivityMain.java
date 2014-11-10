@@ -51,6 +51,9 @@ public class ActivityMain extends FragmentActivity {
                 setUpMap();
             }
         }
+
+        //Center the map on UNF
+        MapCenteringUtils.mapMoveAndZoomTo(mMap, new LatLng(30.268602, -81.507744), 15);
     }
 
     /**
