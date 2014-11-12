@@ -8,15 +8,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import net.simplyadvanced.unfpathfinder.Search.Path;
+import net.simplyadvanced.unfpathfinder.Search.SearchManager;
+
 public class ActivityMain extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private SearchManager mSearchManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
+        debug();
     }
 
     @Override
@@ -54,6 +59,7 @@ public class ActivityMain extends FragmentActivity {
 
         //Center the map on UNF
         MapCenteringUtils.mapMoveAndZoomTo(mMap, new LatLng(30.268602, -81.507744), 15);
+        mSearchManager = SearchManager.getInstance(mMap, getApplicationContext());
     }
 
     /**
@@ -64,5 +70,50 @@ public class ActivityMain extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    }
+
+    private void debug(){
+        Path path = new Path();
+        path.add(new LatLng(30.271483, -81.509146));
+        path.add(new LatLng(30.271441, -81.509206));
+        path.add(new LatLng(30.271413, -81.509300));
+        path.add(new LatLng(30.271343, -81.509472));
+        path.add(new LatLng(30.271298, -81.509602));
+        path.add(new LatLng(30.271284, -81.509614));
+        path.add(new LatLng(30.271270, -81.509663));
+        path.add(new LatLng(30.271224, -81.509747));
+        path.add(new LatLng(30.271165, -81.509745));
+        path.add(new LatLng(30.271113, -81.509756));
+        path.add(new LatLng(30.271075, -81.509766));
+        path.add(new LatLng(30.271002, -81.509761));
+        path.add(new LatLng(30.270968, -81.509761));
+        path.add(new LatLng(30.270902, -81.509747));
+        path.add(new LatLng(30.270857, -81.509715));
+        path.add(new LatLng(30.270811, -81.509680));
+        path.add(new LatLng(30.270751, -81.509633));
+        path.add(new LatLng(30.270699, -81.509568));
+        path.add(new LatLng(30.270662, -81.509523));
+        path.add(new LatLng(30.270677, -81.509533));
+        path.add(new LatLng(30.270683, -81.509540));
+        path.add(new LatLng(30.270648, -81.509523));
+        path.add(new LatLng(30.270614, -81.509463));
+        path.add(new LatLng(30.270610, -81.509442));
+        path.add(new LatLng(30.270534, -81.509370));
+        path.add(new LatLng(30.270435, -81.509304));
+        path.add(new LatLng(30.270349, -81.509274));
+        path.add(new LatLng(30.270252, -81.509244));
+        path.add(new LatLng(30.270186, -81.509260));
+        path.add(new LatLng(30.270007, -81.509269));
+        path.add(new LatLng(30.269871, -81.509288));
+        path.add(new LatLng(30.269700, -81.509272));
+        path.add(new LatLng(30.269694, -81.509272));
+        path.add(new LatLng(30.269688, -81.509279));
+        path.add(new LatLng(30.269549, -81.509244));
+        path.add(new LatLng(30.269505, -81.509211));
+        path.add(new LatLng(30.269459, -81.509104));
+        path.add(new LatLng(30.269473, -81.509017));
+        path.add(new LatLng(30.269475, -81.508936));
+
+        mSearchManager.drawPath(path);
     }
 }

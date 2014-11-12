@@ -17,6 +17,10 @@ public class Node {
 
     }
 
+    public Node(LatLng latLng){
+        mLatlog = latLng;
+    }
+
     public LatLng getLatLog(){
         return mLatlog;
     }
