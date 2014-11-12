@@ -13,6 +13,7 @@ public class Node {
     private LatLng mLatlog;
     private String title;
     private boolean isDestinationNode = false;
+    private boolean isCovered = false;
     private ArrayList<LatLng> adjacency = new ArrayList<LatLng>();
 
     public Node(){
@@ -42,6 +43,14 @@ public class Node {
 
     public boolean isDestinationNode(){
         return isDestinationNode;
+    }
+
+    public boolean isCovered(){
+        return isCovered;
+    }
+
+    public void setIsCovered(boolean b){
+        isCovered = b;
     }
 
     @Override
