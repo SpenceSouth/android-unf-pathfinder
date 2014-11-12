@@ -17,6 +17,10 @@ public class Node {
 
     }
 
+    public LatLng getLatLog(){
+        return mLatlog;
+    }
+
     @Override
     public String toString(){
         return "";
