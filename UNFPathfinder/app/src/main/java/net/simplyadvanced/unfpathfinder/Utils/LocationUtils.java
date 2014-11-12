@@ -1,5 +1,7 @@
 package net.simplyadvanced.unfpathfinder.Utils;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import net.simplyadvanced.unfpathfinder.Search.Path;
 
 /**
@@ -24,6 +26,15 @@ public class LocationUtils {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double d = earthRadius * c;
         return d;
+    }
+
+    public static LatLng getMidpoint(LatLng a, LatLng b) {
+        if (a == null || b == null) {
+            throw new IllegalArgumentException("Don't pass in null.");
+        }
+        double midLatitude = (a.latitude + b.latitude) / 2;
+        double midLongitude = (a.longitude + b.longitude) / 2;
+        return new LatLng(midLatitude, midLongitude);
     }
 
     public static double calculateWalkingTime(Path path){

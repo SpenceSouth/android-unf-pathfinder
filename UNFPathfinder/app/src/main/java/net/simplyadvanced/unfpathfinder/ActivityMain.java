@@ -26,7 +26,7 @@ public class ActivityMain extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
-        debug();
+        //debug();
     }
 
     @Override
@@ -144,7 +144,7 @@ public class ActivityMain extends FragmentActivity {
         path.add(new LatLng(30.269459, -81.509104));
         path.add(new LatLng(30.269473, -81.509017));
         Node node = new Node(30.269475, -81.508936);
-        node.setTitle("Thomas G Carpenter Library");
+        node.addAlias("Thomas G Carpenter Library");
         path.add(node);
 
         mSearchManager.drawPath(path);

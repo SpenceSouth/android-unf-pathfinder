@@ -12,6 +12,7 @@ public class Node {
     //Decs
     private LatLng mLatlog;
     private String title;
+    private ArrayList<String> aliases = new ArrayList<String>();
     private boolean isDestinationNode = false;
     private boolean isCovered = false;
     private ArrayList<LatLng> adjacency = new ArrayList<LatLng>();
@@ -32,13 +33,22 @@ public class Node {
         return mLatlog;
     }
 
-    public void setTitle(String title){
-        this.title = title;
+    public void addAlias(String title){
+        aliases.add(title);
         isDestinationNode = true;
     }
 
+    public ArrayList<String> getAliases(){
+        return aliases;
+    }
+
     public String getTitle(){
-        return title;
+        if(aliases.size() > 0){
+            return aliases.get(0);
+        }
+        else{
+            return "No title";
+        }
     }
 
     public boolean isDestinationNode(){
