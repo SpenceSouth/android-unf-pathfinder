@@ -51,10 +51,10 @@ public class ActivityMain extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case(R.id.search):
-                Toast.makeText(getApplicationContext(), "Pressed Search", Toast.LENGTH_SHORT).show();
+                mSearchManager.openSearchMenu(this);
                 return true;
             case(R.id.clear):
-                Toast.makeText(getApplicationContext(), "Pressed Clear", Toast.LENGTH_SHORT).show();
+                mSearchManager.clearMap();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
