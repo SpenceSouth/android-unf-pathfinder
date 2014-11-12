@@ -1,7 +1,11 @@
 package net.simplyadvanced.unfpathfinder;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -28,6 +32,32 @@ public class ActivityMain extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activitiy_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case(R.id.search):
+                Toast.makeText(getApplicationContext(), "Pressed Search", Toast.LENGTH_SHORT).show();
+                return true;
+            case(R.id.clear):
+                Toast.makeText(getApplicationContext(), "Pressed Clear", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -58,7 +88,7 @@ public class ActivityMain extends FragmentActivity {
         }
 
         //Center the map on UNF
-        MapCenteringUtils.mapMoveAndZoomTo(mMap, new LatLng(30.268602, -81.507744), 15);
+        MapCenteringUtils.mapMoveAndZoomTo(mMap, new LatLng(30.268602, -81.507744), 16);
         mSearchManager = SearchManager.getInstance(mMap, getApplicationContext());
     }
 
