@@ -6,9 +6,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import net.simplyadvanced.unfpathfinder.R;
 
 import java.util.ArrayList;
 
@@ -23,6 +29,7 @@ public class SearchManager {
     private static ArrayList<Node> storage = new ArrayList<Node>();
     private Polyline line;
     private static Context mContext;
+    private Marker marker;
 
     private SearchManager(){
 
@@ -66,6 +73,17 @@ public class SearchManager {
         Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
         Log.d("DrawPath",message);
 
+        //TODO: Have title pull form the destination list
+        marker = mMap.addMarker(new MarkerOptions()
+                .position(path.getEndingNode().getLatLog())
+                .title("Destination: " + path.getEndingNode().getTitle())
+                .snippet(message));
+
+    }
+
+    private BitmapDescriptor getIconForMapMarker() {
+        // Eventually, more conditions will be added here maybe.
+        return BitmapDescriptorFactory.fromResource(R.drawable.abc_ab_share_pack_holo_dark);
     }
 
 

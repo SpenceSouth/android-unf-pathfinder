@@ -12,6 +12,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import net.simplyadvanced.unfpathfinder.Search.Node;
 import net.simplyadvanced.unfpathfinder.Search.Path;
 import net.simplyadvanced.unfpathfinder.Search.SearchManager;
 
@@ -142,7 +143,9 @@ public class ActivityMain extends FragmentActivity {
         path.add(new LatLng(30.269505, -81.509211));
         path.add(new LatLng(30.269459, -81.509104));
         path.add(new LatLng(30.269473, -81.509017));
-        path.add(new LatLng(30.269475, -81.508936));
+        Node node = new Node(30.269475, -81.508936);
+        node.setTitle("Thomas G Carpenter Library");
+        path.add(node);
 
         mSearchManager.drawPath(path);
     }
