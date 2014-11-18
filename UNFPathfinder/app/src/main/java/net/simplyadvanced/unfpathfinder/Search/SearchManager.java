@@ -24,6 +24,9 @@ import net.simplyadvanced.unfpathfinder.R;
 import net.simplyadvanced.unfpathfinder.Utils.LocationUtils;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Spence on 11/12/2014.
@@ -37,6 +40,9 @@ public class SearchManager {
     private Polyline line;
     private static Context mContext;
     private Marker marker;
+    boolean flag = false;
+    private Lock lock = new ReentrantLock();
+    private Semaphore semaphore = new Semaphore(1);
 
     private SearchManager(){
 
@@ -98,20 +104,16 @@ public class SearchManager {
 
         //Draws path on map
         for(int i = 0; i < path.size()-1; i++){
-            line = mMap.addPolyline(new PolylineOptions()
-                    .add(path.getNode(i).getLatLog(), path.getNode(i+1).getLatLog())
-                    .width(8).color(Color.BLUE)
-                    .geodesic(true));
-            try {
-                Thread.sleep(500);
-            }
-            catch (Exception ex){
-                Toast.makeText(mContext, "No sleep fo the weary", Toast.LENGTH_SHORT).show();
-            }
+
+            draw(path.getNode(i).getLatLog(), path.getNode(i+1).getLatLog());
+
+            Log.d("Map","Drew first line" + i);
         }
 
         //Display ending point with walking time and distances
         Log.d("DrawPath",message);
+
+        Log.d("Map","About to enter marker");
 
         //TODO: Have title pull form the destination list
         marker = mMap.addMarker(new MarkerOptions()
@@ -119,13 +121,30 @@ public class SearchManager {
                 .title("Destination: " + path.getEndingNode().getTitle())
                 .snippet(message));
 
+        Log.d("Map","Exited marker");
+
+    }
+
+    private void draw(LatLng a, LatLng b){
+
+        mMap.addPolyline(new PolylineOptions()
+                .add(a, b)
+                .width(8).color(Color.BLUE)
+                .geodesic(true));
+        try {
+            Thread.sleep(200);
+        }
+        catch (Exception ex){
+            Toast.makeText(mContext, "No sleep for the weary", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void clearMap(){
         mMap.clear();
     }
 
-    public void openSearchMenu(Activity activity){
+    public void openSearchMenu(final Activity activity){
 
         final View inflatedView = activity.getLayoutInflater().inflate(R.layout.search_menu, null);
 
@@ -133,25 +152,27 @@ public class SearchManager {
         final EditText destinationInput = (EditText) inflatedView.findViewById(R.id.destination_input);
         final EditText originInput = (EditText) inflatedView.findViewById(R.id.origin_input);
 
+
         AlertDialog.Builder dialog = new AlertDialog.Builder(activity)
-                .setTitle("Destination Search")
-                .setMessage("Enter in your starting origin and your destination to calculate the route")
-                .setView(inflatedView)
-                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            .setTitle("Destination Search")
+            .setMessage("Enter in your starting origin and your destination to calculate the route")
+            .setView(inflatedView)
+            .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                })
-                .setPositiveButton("Let's go!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                }
+            })
+            .setPositiveButton("Let's go!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-                        //Starts the search with the input values
-                        Log.d("TERM","" + storage.size());
-                        startSearch(findSearchTerm(originInput.getText().toString().trim()), findSearchTerm(destinationInput.getText().toString().trim()));
-                    }
-                });
+                    //Starts the search with the input values
+                    Log.d("TERM","" + storage.size());
+                    dialog.dismiss();
+                    startSearch(findSearchTerm(originInput.getText().toString().trim()), findSearchTerm(destinationInput.getText().toString().trim()));
+                }
+            });
 
         dialog.show();
 
@@ -166,6 +187,7 @@ public class SearchManager {
         return null;
     }
 
+    /**After path is created by  Astar */
     private void startSearch(Node start, Node end){
         if(start == null || end == null){
             Toast.makeText(mContext, "Search failed", Toast.LENGTH_SHORT).show();
@@ -277,8 +299,15 @@ public class SearchManager {
 
     private void generatePath(Node start, Node end){
         //TODO: For debugging purposes only
-        Path path = createFakePath();
-        drawPath(path);
+        mMap.clear();
+        Log.d("Generate Path","Made it here");
+        final Path path = createFakePath();             //TODO: Replace createFakePath with the call with the path from A*(start, end)
+        new Thread(){
+            @Override
+            public void run(){
+                drawPath(path);
+            }
+        }.run();
 
         //Center path if necessary
         LatLng midpoint = LocationUtils.getMidpoint(start.getLatLog(), end.getLatLog());
