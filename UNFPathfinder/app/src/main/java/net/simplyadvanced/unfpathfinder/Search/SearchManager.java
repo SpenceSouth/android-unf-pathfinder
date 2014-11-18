@@ -298,9 +298,10 @@ public class SearchManager {
 
 
     private void generatePath(Node start, Node end){
-        //TODO: For debugging purposes only
+
+        //Clear the map before drawing over it again.
         mMap.clear();
-        Log.d("Generate Path","Made it here");
+
         final Path path = createFakePath();             //TODO: Replace createFakePath with the call with the path from A*(start, end)
         new Thread(){
             @Override
