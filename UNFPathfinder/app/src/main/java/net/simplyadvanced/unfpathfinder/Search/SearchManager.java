@@ -63,7 +63,7 @@ public class SearchManager {
             mContext = context;
 
             //TODO: Delete this when done with debugging
-            addDebuggingNodes();
+            //addDebuggingNodes();
 
         }
         return mSearchManager;
