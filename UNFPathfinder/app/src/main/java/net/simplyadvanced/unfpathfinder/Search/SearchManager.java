@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -156,9 +157,10 @@ public class SearchManager {
         //Get values from EditText fields
         final EditText destinationInput = (EditText) inflatedView.findViewById(R.id.destination_input);
         final EditText originInput = (EditText) inflatedView.findViewById(R.id.origin_input);
+        final Button gpsButton = (Button) inflatedView.findViewById(R.id.calculate_origin_button);
 
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(activity)
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(activity)
             .setTitle("Destination Search")
             .setMessage("Enter in your starting origin and your destination to calculate the route")
             .setView(inflatedView)
@@ -179,7 +181,17 @@ public class SearchManager {
                 }
             });
 
-        dialog.show();
+        final AlertDialog alert = dialog.create();
+
+        gpsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert.cancel();
+                Toast.makeText(mContext, "Finding closest data point", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.show();
 
     }
 
