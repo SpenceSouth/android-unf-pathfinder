@@ -3,5 +3,6 @@
 
     <string name="app_name">UNF Pathfinder</string>
     <string name="title_activity_activity_main">UNF Pathfinder</string>
+    <string name="eula_agreement">LICENSED APPLICATION END USER LICENSE AGREEMENT\n\n Please don\'t sue us.  Kay thanks!</string>
 
 </resources>

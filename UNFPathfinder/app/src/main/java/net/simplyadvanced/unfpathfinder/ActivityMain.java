@@ -1,5 +1,7 @@
 package net.simplyadvanced.unfpathfinder;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -15,18 +17,20 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import net.simplyadvanced.unfpathfinder.Search.Node;
 import net.simplyadvanced.unfpathfinder.Search.Path;
 import net.simplyadvanced.unfpathfinder.Search.SearchManager;
+import net.simplyadvanced.unfpathfinder.Settings.UserPrefs;
 
 public class ActivityMain extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private SearchManager mSearchManager;
+    private UserPrefs mUserPrefs;
+    private boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
-        //debug();
     }
 
     @Override
@@ -91,6 +95,12 @@ public class ActivityMain extends FragmentActivity {
         //Center the map on UNF
         MapCenteringUtils.mapMoveAndZoomTo(mMap, new LatLng(30.268602, -81.507744), 16);
         mSearchManager = SearchManager.getInstance(mMap, getApplicationContext());
+
+        mUserPrefs = UserPrefs.getInstance();
+
+        if(!mUserPrefs.getEulaPref()){
+            openEULA();
+        }
     }
 
     /**
@@ -148,5 +158,29 @@ public class ActivityMain extends FragmentActivity {
         path.add(node);
 
         mSearchManager.drawPath(path);
+    }
+
+    /**Opens End User Licensing Agreements that must be agreed to */
+    private void openEULA(){
+
+        if(flag) return;
+
+        flag = true;
+
+        new AlertDialog.Builder(this)
+                .setTitle("EULA")
+                .setMessage(R.string.eula_agreement)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.exit(1);
+                    }
+                })
+                .setPositiveButton("Agree", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mUserPrefs.saveEulaPref(true);
+                    }
+                }).show();
     }
 }

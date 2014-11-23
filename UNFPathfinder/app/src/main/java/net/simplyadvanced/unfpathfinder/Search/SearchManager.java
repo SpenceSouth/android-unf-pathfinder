@@ -48,6 +48,10 @@ public class SearchManager {
 
     }
 
+    public Context getContext(){
+        return mContext;
+    }
+
     public static SearchManager getInstance(){
         if(mSearchManager == null){
             mSearchManager = new SearchManager();
@@ -56,6 +60,7 @@ public class SearchManager {
     }
 
     public static SearchManager getInstance(GoogleMap map, Context context){
+        Log.d("SearchManager","creating");
         if(mSearchManager == null){
             mSearchManager = new SearchManager();
             mMap = map;
