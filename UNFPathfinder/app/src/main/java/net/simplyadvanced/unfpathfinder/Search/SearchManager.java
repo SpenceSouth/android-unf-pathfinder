@@ -10,11 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.location.Location;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -27,7 +24,6 @@ import net.simplyadvanced.unfpathfinder.Utils.LocationUtils;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +79,8 @@ public class SearchManager {
     }
 
     public void loadNodes(){
-        //todo designate targetfile
-        String targetFile="nodes.txt";
+        //done todo designate targetfile
+       // String targetFile="rawNodestxt";
         String[] inputArray;
         String[][] inputFile=new String[1][1];
         ArrayList<String> inputList = new ArrayList<String>();
@@ -93,15 +89,25 @@ public class SearchManager {
         double log;
         Node myNode;
         LatLng coordinates;
+        InputStream myInputStream;
 
         try
         {
 
-            FileInputStream myFileInputStream = getContext().openFileInput("nodes.txt");
-            DataInputStream dataInput = new DataInputStream(myFileInputStream);
-            BufferedReader inputBuffer = new BufferedReader(new InputStreamReader(dataInput));
-            String inputString;
+            myInputStream = mContext.getResources().openRawResource(R.raw.rawnodes);
 
+        }
+        catch (Exception e)
+        {
+            // Catch exception if any
+            //Toast.makeText(mContext,"The file was not found", Toast.LENGTH_SHORT).show();
+            //System.err.println("Error: " + e.getMessage()+"\n");
+            return;
+        }
+
+        DataInputStream dataInput = new DataInputStream(myInputStream);
+        BufferedReader inputBuffer = new BufferedReader(new InputStreamReader(dataInput));
+        String inputString;
 
 
             inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
@@ -111,15 +117,9 @@ public class SearchManager {
                 inputFile[i]=inputArray[i].split(";");
             }
 
+
             //int pants=0;
-        }
-        catch (Exception e)
-        {
-            // Catch exception if any
-            Toast.makeText(mContext,"The file was not found", Toast.LENGTH_SHORT).show();
-            //System.err.println("Error: " + e.getMessage()+"\n");
-            return;
-        }
+
         for (int i=0; i<inputFile.length; i++) {
             //ignore commented lines
             //TODO: Breaks here with NullPointerException
@@ -202,7 +202,7 @@ public class SearchManager {
         {
 
             everyNode.setDistance(everyNode.getDistanceTo(finish));
-            //reinitalize nodes
+            //reinitalize rawnodes
             everyNode.setF_score(0);
             everyNode.setG_score(0);
             everyNode.setCameFrom(null);
