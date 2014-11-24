@@ -48,7 +48,7 @@ public class Path {
         return nodes.get(nodes.size()-1);
     }
 
-    /**Returns the distance between all nodes of the path */
+    /**Returns the distance between all rawnodes of the path */
     public double getPathDistance(){
         DecimalFormat df = new DecimalFormat("#.##");
         double distance = 0;
