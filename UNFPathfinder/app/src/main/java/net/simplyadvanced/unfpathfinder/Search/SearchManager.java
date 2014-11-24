@@ -198,9 +198,9 @@ public class SearchManager {
         LatLng out;
         String[] latlongStrings;
         {
-            latlongStrings=input.split("\\s+", 2);
+            latlongStrings=input.split(",");
         }
-        lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
+        lat=Double.parseDouble(latlongStrings[0]);
         if (latlongStrings[1].contains(";"))
         {
             latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
