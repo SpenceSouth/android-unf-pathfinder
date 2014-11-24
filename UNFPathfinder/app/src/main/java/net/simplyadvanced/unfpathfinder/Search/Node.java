@@ -1,6 +1,7 @@
 package net.simplyadvanced.unfpathfinder.Search;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -45,6 +46,7 @@ public class Node implements Comparable{
     }
 
     public Node(LatLng latLng){
+        Log.d("Node",this.toString());
         mLatlog = latLng;
     }
 
@@ -110,7 +112,7 @@ public class Node implements Comparable{
 
     @Override
     public String toString(){
-        return "";
+        return getTitle() + " " + mLatlog.toString();
     }
 
 }
