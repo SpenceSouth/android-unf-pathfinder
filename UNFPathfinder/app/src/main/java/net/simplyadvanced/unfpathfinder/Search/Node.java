@@ -15,7 +15,7 @@ public class Node {
     private ArrayList<String> aliases = new ArrayList<String>();
     private boolean isDestinationNode = false;
     private boolean isCovered = false;
-    private ArrayList<LatLng> adjacency = new ArrayList<LatLng>();
+    private ArrayList<Node> adjacency = new ArrayList<Node>();
 
     public Node(){
 
@@ -51,9 +51,19 @@ public class Node {
         }
     }
 
+    public void setAdjacent(Node otherNode)
+    {
+        if (adjacency.contains(otherNode)){}
+        else{
+            adjacency.add(otherNode);
+            if (!otherNode.isAdjacent(this)) {otherNode.setAdjacent(this);}
+        }
+    }
+
     public boolean isDestinationNode(){
         return isDestinationNode;
     }
+    public boolean isAdjacent(Node otherNode)    { return (adjacency.contains(otherNode)); }
 
     public boolean isCovered(){
         return isCovered;

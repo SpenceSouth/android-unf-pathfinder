@@ -24,6 +24,10 @@ import net.simplyadvanced.unfpathfinder.MapCenteringUtils;
 import net.simplyadvanced.unfpathfinder.R;
 import net.simplyadvanced.unfpathfinder.Utils.LocationUtils;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
@@ -76,9 +80,103 @@ public class SearchManager {
     }
 
     public void loadNodes(){
+        //todo designate targetfile
+        String targetFile="nodes.txt";
+        String[] inputArray;
+        String[][] inputFile;
+        ArrayList<String> inputList = new ArrayList<String>();
+        String[]   latlongStrings;
+        double lat;
+        double log;
+        Node myNode;
+        LatLng coordinates;
 
+        try
+        {
+
+            FileInputStream myFileInputStream = getContext().openFileInput("nodes.txt");
+            DataInputStream dataInput = new DataInputStream(myFileInputStream);
+            BufferedReader inputBuffer = new BufferedReader(new InputStreamReader(dataInput));
+            String inputString;
+
+
+
+            inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
+            inputFile = new String[inputArray.length][];
+            for (int i=0; i<inputArray.length; i++)
+            {
+                inputFile[i]=inputArray[i].split(";");
+            }
+
+            //int pants=0;
+        }
+        catch (Exception e)
+        {
+            // Catch exception if any
+            System.err.println("Error: " + e.getMessage()+"\n");
+        }
+        for (int i=0; i<inputFile.length; i++)
+        {
+            //ignore commented lines
+            if (inputFile[i][0].substring(0,1).equals("//"))
+            {
+                continue;
+            }
+            else
+            {
+                latlongStrings=inputFile[i][0].split("\\s+", 2);
+            }
+            lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
+            if (latlongStrings[1].contains(";"))
+            {
+                latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
+            }
+            log=Double.parseDouble(latlongStrings[1]);
+            myNode=new Node (lat, log);
+
+            for (int j=1; j<inputFile[i].length; j++)
+            {
+                //todo need a cleaner way to check if numeric or a name
+                try
+                {
+                  coordinates=nodeCoords(inputFile[i][j]);
+                  for (Node otherNode: storage )
+                    {
+                        if (otherNode.equals(coordinates)) {myNode.setAdjacent(otherNode);}
+                    }
+                }
+                catch (NumberFormatException n)
+                {
+                    if (latlongStrings[1].contains(";"))
+                    {
+                        latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
+                    }
+                    myNode.addAlias(inputFile[i][j]);
+                }
+            }
+            storage.add(myNode);
+        }
     }
 
+    private LatLng nodeCoords(String input) throws NumberFormatException
+    {
+        double lat;
+        double log;
+        LatLng out;
+        String[] latlongStrings;
+        {
+            latlongStrings=input.split("\\s+", 2);
+        }
+        lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
+        if (latlongStrings[1].contains(";"))
+        {
+            latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
+        }
+        log=Double.parseDouble(latlongStrings[1]);
+        out=new LatLng(lat,log);
+        return out;
+
+    }
     public void drawPath(Path path){
 
         String message = "Walking time: " + path.getWalkingTime() + " minutes\n";
