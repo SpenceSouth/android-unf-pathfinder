@@ -132,7 +132,9 @@ public class SearchManager {
                     Log.d("debug", "InputFile["+i+"][0] is empty");
                     continue;
                 }
-                else {
+                else
+                {
+
                     latlongStrings = inputFile[i][0].split("\\s+", 2);
                     lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
                     if (latlongStrings[1].contains(";"))
@@ -162,6 +164,7 @@ public class SearchManager {
                         }
                     }
                     storage.add(myNode);
+                    Log.d("debug", ("InputFile["+i+"][0] added a node lat: "+lat+" lng: "+log));
                 }
             }
             Log.d("debug", "out of the if");
