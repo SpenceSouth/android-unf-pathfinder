@@ -1,5 +1,7 @@
 package net.simplyadvanced.unfpathfinder.Search;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Spence on 11/12/2014.
  */
-public class Node {
+public class Node implements Comparable{
 
     //Decs
     private LatLng mLatlog;
@@ -16,8 +18,29 @@ public class Node {
     private boolean isDestinationNode = false;
     private boolean isCovered = false;
     private ArrayList<Node> adjacency = new ArrayList<Node>();
+    private double g_score;
+    private double f_score;
+    private Node cameFrom;
+    private double distance;
+
 
     public Node(){
+
+    }
+
+    public double getG_score(){ return g_score;}
+    public void setG_score(double input) {g_score=input;}
+    public double getF_score(){ return f_score;}
+    public void setF_score(double input) {f_score=input;}
+    public double getDistance(){ return distance;}
+    public void setDistance(double input) {distance=input;}
+    public Node getCameFrom(){return cameFrom;}
+    public void setCameFrom(Node input){cameFrom=input;}
+
+    public double getDistanceTo(Node input)
+    {
+        Float[] distances;
+        return (Math.sqrt ((this.getLatLog().latitude-input.getLatLog().latitude)*(this.getLatLog().latitude-input.getLatLog().latitude)+(this.getLatLog().longitude-input.getLatLog().longitude)*(this.getLatLog().longitude-input.getLatLog().longitude)));
 
     }
 
@@ -51,6 +74,7 @@ public class Node {
         }
     }
 
+    public ArrayList<Node> getAdjacency() {return adjacency;}
     public void setAdjacent(Node otherNode)
     {
         if (adjacency.contains(otherNode)){}
@@ -58,6 +82,17 @@ public class Node {
             adjacency.add(otherNode);
             if (!otherNode.isAdjacent(this)) {otherNode.setAdjacent(this);}
         }
+    }
+    public int compareTo(Object other)
+    {
+
+        if (this.f_score == ((Node) other).f_score)
+            return 0;
+        else if (this.f_score > ((Node) other).f_score)
+            return 1;
+        else
+            return -1;
+
     }
 
     public boolean isDestinationNode(){

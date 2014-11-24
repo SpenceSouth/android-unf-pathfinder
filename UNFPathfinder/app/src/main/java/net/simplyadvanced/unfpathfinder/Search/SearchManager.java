@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.location.Location;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -29,9 +30,11 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.*;
 
 /**
  * Created by Spence on 11/12/2014.
@@ -83,7 +86,7 @@ public class SearchManager {
         //todo designate targetfile
         String targetFile="nodes.txt";
         String[] inputArray;
-        String[][] inputFile;
+        String[][] inputFile=new String[1][1];
         ArrayList<String> inputList = new ArrayList<String>();
         String[]   latlongStrings;
         double lat;
@@ -142,7 +145,7 @@ public class SearchManager {
                   coordinates=nodeCoords(inputFile[i][j]);
                   for (Node otherNode: storage )
                     {
-                        if (otherNode.equals(coordinates)) {myNode.setAdjacent(otherNode);}
+                        if (otherNode.getLatLog().equals(coordinates)) {myNode.setAdjacent(otherNode);}
                     }
                 }
                 catch (NumberFormatException n)
@@ -177,6 +180,106 @@ public class SearchManager {
         return out;
 
     }
+
+    //pased from aaron's A* project
+    public void aStar(Node start, Node finish)
+    {
+
+        Node current;
+        ArrayList<Node> closedset = new ArrayList<Node>();
+        List<Node> openset = new ArrayList<Node>();
+        ArrayList<Node> camefrom;
+        start.setG_score(0);
+        //Double fscore=start.g_score+start.distance;
+        Double gscore=0.0;
+        Double tenGscore;
+        float[] distances;
+        for (Node everyNode: storage)
+        {
+
+            everyNode.setDistance(everyNode.getDistanceTo(finish));
+            //reinitalize nodes
+            everyNode.setF_score(0);
+            everyNode.setG_score(0);
+            everyNode.setCameFrom(null);
+        }
+        current=start;
+        openset.add(start);
+        while (!openset.isEmpty()) {
+            //need to find collections and Comparator
+            Collections.sort(openset, new Comparator<Node>(){
+                @Override
+                public int compare(Node node1, Node node2)
+                {
+                    return node1.compareTo(node2);
+
+                }
+            });
+
+            current=openset.get(0);
+            //System.out.println(" Mt Bond is considering "+current.toString()+"It's score is: "+current.f_score);
+
+            if (current==finish)
+            {
+                //reconstruct_path();
+                return;
+            }
+
+
+            openset.remove(current);
+            closedset.add(current);
+            for (Node neighbor: current.getAdjacency())
+            {
+                if (closedset.contains(neighbor))continue;
+                tenGscore=current.getG_score()+current.getDistanceTo(neighbor);
+
+                if (!openset.contains(neighbor)||tenGscore<current.getG_score())
+                {
+
+                    neighbor.setCameFrom(current);
+                    neighbor.setG_score(tenGscore);
+                    neighbor.setF_score(neighbor.getG_score()+neighbor.getDistance());
+                    if (!openset.contains(neighbor))
+                    {
+                        openset.add(neighbor);
+                        //System.out.println("Mr Bond went from "+current.toString()+" to "+neighbor.toString()+"\n Tenative score is:"+tenGscore);
+
+                    }
+                }
+
+            }
+        }
+
+        // todo create path construction method  from A* reconstruct_path();
+        /*
+            public void reconstruct_path()
+            {
+                Node current=myNodes.get(1);
+                Node start=myNodes.get(0);
+                ArrayList<Node> reverse_path= new ArrayList<Node>();
+                ArrayList<Node> forward_path= new ArrayList<Node>();
+                while (current.x!=start.x&&current.y!=start.y)
+                {
+                    reverse_path.add(current);
+                    current=current.cameFrom;
+                }
+                reverse_path.add(current);
+
+                for (int i=reverse_path.size()-1; i>=0; i--)
+                {
+                    forward_path.add(reverse_path.get(i));
+                }
+                System.out.println("the path is:");
+                for (Node step:forward_path)
+                {
+                    System.out.print(step.toString());
+                }
+
+            }
+
+         */
+    }
+
     public void drawPath(Path path){
 
         String message = "Walking time: " + path.getWalkingTime() + " minutes\n";
