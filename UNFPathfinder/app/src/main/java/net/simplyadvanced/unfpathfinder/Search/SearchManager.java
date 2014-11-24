@@ -95,7 +95,7 @@ public class SearchManager {
         {
 
             myInputStream = mContext.getResources().openRawResource(R.raw.rawnodes);
-
+            Log.d("debug", "The file was found");
         }
         catch (Exception e)
         {
@@ -111,15 +111,30 @@ public class SearchManager {
         DataInputStream dataInput = new DataInputStream(myInputStream);
         BufferedReader inputBuffer = new BufferedReader(new InputStreamReader(dataInput));
         String inputString;
+        try {
+            while ((inputString = inputBuffer.readLine()) != null) {
+                //inputString = inputString.trim();
+                if ((inputString.length() != 0)) {
+                    inputList.add(inputString);
+                }
+            }
+        }
+        catch (IOException s)
+        {
+            Log.d("debug", "IOException");
+            Log.d("debug", s.getMessage());
+            Log.d("debug", s.getStackTrace().toString());
+        }
 
 
+        Log.d("debug", "processing inputs");
             inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
             inputFile = new String[inputArray.length][];
             for (int i=0; i<inputArray.length; i++)
             {
                 inputFile[i]=inputArray[i].split(";");
             }
-
+        Log.d("debug", "Lines tokenized by semicolons");
 
             //int pants=0;
 
@@ -134,6 +149,7 @@ public class SearchManager {
                 }
                 else
                 {
+                    Log.d("debug", "Got a line with a node");
 
                     latlongStrings = inputFile[i][0].split("\\s+", 2);
                     lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
