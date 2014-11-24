@@ -88,7 +88,7 @@ public class SearchManager {
         String[] inputArray;
         String[][] inputFile=new String[1][1];
         ArrayList<String> inputList = new ArrayList<String>();
-        String[]   latlongStrings;
+        String[]   latlongStrings=new String[1];
         double lat;
         double log;
         Node myNode;
@@ -116,19 +116,22 @@ public class SearchManager {
         catch (Exception e)
         {
             // Catch exception if any
-            System.err.println("Error: " + e.getMessage()+"\n");
+            Toast.makeText(mContext,"The file was not found", Toast.LENGTH_SHORT).show();
+            //System.err.println("Error: " + e.getMessage()+"\n");
+            return;
         }
-        for (int i=0; i<inputFile.length; i++)
-        {
+        for (int i=0; i<inputFile.length; i++) {
             //ignore commented lines
             //TODO: Breaks here with NullPointerException
-            if (inputFile[i][0].substring(0,1).equals("//"))
+            if(!inputFile[i][0].isEmpty())
             {
-                continue;
-            }
-            else
-            {
-                latlongStrings=inputFile[i][0].split("\\s+", 2);
+                if (inputFile[i][0].substring(0, 1).equals("//"))
+                {
+                    continue;
+                }
+                else {
+                    latlongStrings = inputFile[i][0].split("\\s+", 2);
+                }
             }
             lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
             if (latlongStrings[1].contains(";"))
