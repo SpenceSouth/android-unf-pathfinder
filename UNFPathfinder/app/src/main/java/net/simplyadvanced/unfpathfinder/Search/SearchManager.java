@@ -53,7 +53,7 @@ public class SearchManager {
     private Semaphore semaphore = new Semaphore(1);
 
     private SearchManager(){
-
+        loadNodes();
     }
 
     public Context getContext(){
@@ -121,6 +121,7 @@ public class SearchManager {
         for (int i=0; i<inputFile.length; i++)
         {
             //ignore commented lines
+            //TODO: Breaks here with NullPointerException
             if (inputFile[i][0].substring(0,1).equals("//"))
             {
                 continue;
@@ -182,7 +183,7 @@ public class SearchManager {
     }
 
     //pased from aaron's A* project
-    public void aStar(Node start, Node finish)
+    public static void aStar(Node start, Node finish)
     {
 
         Node current;
