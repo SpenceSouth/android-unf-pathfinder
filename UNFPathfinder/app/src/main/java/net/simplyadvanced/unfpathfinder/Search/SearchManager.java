@@ -70,10 +70,10 @@ public class SearchManager {
     public static SearchManager getInstance(GoogleMap map, Context context){
         Log.d("SearchManager","creating");
         if(mSearchManager == null){
-            mSearchManager = new SearchManager();
             mMap = map;
             mMap.clear();
             mContext = context;
+            mSearchManager = new SearchManager();
 
             //TODO: Delete this when done with debugging
             //addDebuggingNodes();
@@ -88,7 +88,7 @@ public class SearchManager {
         String[] inputArray;
         String[][] inputFile=new String[1][1];
         ArrayList<String> inputList = new ArrayList<String>();
-        String[]   latlongStrings=new String[1];
+        String[] latlongStrings=new String[1];
         double lat;
         double log;
         Node myNode;
