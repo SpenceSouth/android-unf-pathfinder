@@ -102,6 +102,8 @@ public class SearchManager {
             // Catch exception if any
             Toast.makeText(mContext,"The file was not found", Toast.LENGTH_SHORT).show();
             //System.err.println("Error: " + e.getMessage()+"\n");
+            Log.d("debug", "The file was not found");
+
             return;
         }
 
@@ -123,47 +125,50 @@ public class SearchManager {
 
         for (int i=0; i<inputFile.length; i++) {
             //ignore commented lines
-            if(!inputFile[i][0].isEmpty())
+            if(!inputFile[i][0].equals(""));
             {
                 if (inputFile[i][0].substring(0, 1).equals("//"))
                 {
+                    Log.d("debug", "InputFile["+i+"][0] is empty");
                     continue;
                 }
                 else {
                     latlongStrings = inputFile[i][0].split("\\s+", 2);
-                }
-            }
-
-            //TODO:  Never makes it outside of the if statement above
-            lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
-            if (latlongStrings[1].contains(";"))
-            {
-                latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
-            }
-            log=Double.parseDouble(latlongStrings[1]);
-            myNode=new Node (lat, log);
-
-            for (int j=1; j<inputFile[i].length; j++)
-            {
-                //todo need a cleaner way to check if numeric or a name
-                try
-                {
-                  coordinates=nodeCoords(inputFile[i][j]);
-                  for (Node otherNode: storage )
-                    {
-                        if (otherNode.getLatLog().equals(coordinates)) {myNode.setAdjacent(otherNode);}
-                    }
-                }
-                catch (NumberFormatException n)
-                {
+                    lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
                     if (latlongStrings[1].contains(";"))
                     {
                         latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
                     }
-                    myNode.addAlias(inputFile[i][j]);
+                    log=Double.parseDouble(latlongStrings[1]);
+                    myNode=new Node (lat, log);
+                    for (int j=1; j<inputFile[i].length; j++)
+                    {
+                        //todo need a cleaner way to check if numeric or a name
+                        try
+                        {
+                            coordinates=nodeCoords(inputFile[i][j]);
+                            for (Node otherNode: storage )
+                            {
+                                if (otherNode.getLatLog().equals(coordinates)) {myNode.setAdjacent(otherNode);}
+                            }
+                        }
+                        catch (NumberFormatException n)
+                        {
+                            if (latlongStrings[1].contains(";"))
+                            {
+                                latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
+                            }
+                            myNode.addAlias(inputFile[i][j]);
+                        }
+                    }
+                    storage.add(myNode);
                 }
             }
-            storage.add(myNode);
+            Log.d("debug", "out of the if");
+            //TODO:  Never makes it outside of the if statement above
+
+
+
         }
     }
 
