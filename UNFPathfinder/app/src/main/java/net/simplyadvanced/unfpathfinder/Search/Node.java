@@ -52,6 +52,7 @@ public class Node implements Comparable{
 
     public Node(double lat, double lng){
         mLatlog = new LatLng(lat, lng);
+        Log.d("Node",this.toString());
     }
 
     public LatLng getLatLog(){

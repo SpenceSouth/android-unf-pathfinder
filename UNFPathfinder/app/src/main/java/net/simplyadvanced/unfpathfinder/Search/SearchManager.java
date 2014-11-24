@@ -159,6 +159,7 @@ public class SearchManager {
                     }
                     log=Double.parseDouble(latlongStrings[1]);
                     myNode=new Node (lat, log);
+
                     for (int j=1; j<inputFile[i].length; j++)
                     {
                         //todo need a cleaner way to check if numeric or a name
@@ -212,7 +213,7 @@ public class SearchManager {
     }
 
     //pased from aaron's A* project
-    public static void aStar(Node start, Node finish)
+    public static Path aStar(Node start, Node finish)
     {
 
         Node current;
@@ -224,6 +225,7 @@ public class SearchManager {
         Double gscore=0.0;
         Double tenGscore;
         float[] distances;
+        Path output=new Path();
         for (Node everyNode: storage)
         {
 
@@ -252,7 +254,22 @@ public class SearchManager {
             if (current==finish)
             {
                 //reconstruct_path();
-                return;
+                Path backwardsoutput = new Path();
+                backwardsoutput.add(finish);
+                current=finish.getCameFrom();
+                while (!current.getLatLog().equals(start.getLatLog()))
+                {
+                    backwardsoutput.add(current);
+                    current=current.getCameFrom();
+                }
+                backwardsoutput.add(current);
+                //output= new Path();
+                while (!backwardsoutput.nodes.isEmpty())
+                {
+                    output.add(backwardsoutput.nodes.get(backwardsoutput.size()-1));
+                    backwardsoutput.nodes.remove(backwardsoutput.size()-1);
+                }
+                return output;
             }
 
 
@@ -278,6 +295,10 @@ public class SearchManager {
                 }
 
             }
+
+
+
+
         }
 
         // todo create path construction method  from A* reconstruct_path();
@@ -308,6 +329,7 @@ public class SearchManager {
             }
 
          */
+        return output;
     }
 
     public void drawPath(Path path){
