@@ -33,7 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.*;
 
 /**
- * Created by Spence on 11/12/2014.
+ * 
  */
 public class SearchManager {
 
