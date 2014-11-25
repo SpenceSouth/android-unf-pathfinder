@@ -109,6 +109,26 @@ public class MapCenteringUtils {
         return null;
     }
 
+    public static LatLng getCurrentGpsPosition(Context context) {
+
+        mLocationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+
+        if (isGpsEnabled()) {
+            Location gpsLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (gpsLocation != null) { // If there is a last known location via GPS.
+                return new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+            }
+        }
+        if (isNetworkEnabled()) {
+            Location networkLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (networkLocation != null) { // If there is a last known location via network.
+                return new LatLng(networkLocation.getLatitude(), networkLocation.getLongitude());
+            }
+        }
+
+        return null;
+    }
+
     private static boolean isGpsEnabled() {
         try {
             return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);

@@ -1,7 +1,10 @@
 package net.simplyadvanced.unfpathfinder.Utils;
 
+import android.content.Context;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import net.simplyadvanced.unfpathfinder.MapCenteringUtils;
 import net.simplyadvanced.unfpathfinder.Search.Path;
 
 /**
@@ -39,6 +42,10 @@ public class LocationUtils {
 
     public static double calculateWalkingTime(Path path){
         return 0;
+    }
+
+    public static LatLng getCurrentPosition(Context context){
+        return MapCenteringUtils.getCurrentGpsPosition(context);
     }
 
 }
