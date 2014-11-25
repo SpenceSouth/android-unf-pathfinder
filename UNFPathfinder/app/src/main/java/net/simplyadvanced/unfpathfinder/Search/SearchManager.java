@@ -253,7 +253,9 @@ public class SearchManager {
 
             if (current==finish)
             {
-                //reconstruct_path();
+                //Path output;
+                output=reconstruct_path(start,  finish);
+                /*
                 Path backwardsoutput = new Path();
                 backwardsoutput.add(finish);
                 current=finish.getCameFrom();
@@ -269,6 +271,7 @@ public class SearchManager {
                     output.add(backwardsoutput.nodes.get(backwardsoutput.size()-1));
                     backwardsoutput.nodes.remove(backwardsoutput.size()-1);
                 }
+                */
                 return output;
             }
 
@@ -329,8 +332,36 @@ public class SearchManager {
             }
 
          */
+        Log.d("debug", "Exiting A* from the wrong spot look at brackets");
+
+        output=reconstruct_path(start, finish);
+    }
+
+    public static Path reconstruct_path(Node start, Node finish)
+    {
+        Node current;
+        Path output=new Path();
+        Path backwardsoutput = new Path();
+        backwardsoutput.add(finish);
+        current=finish.getCameFrom();
+        //what is the tolerence on LatLng.equals
+        while (!current.getLatLog().toString().equals(start.getLatLog().toString()))
+        {
+            backwardsoutput.add(current);
+            current=current.getCameFrom();
+        }
+        backwardsoutput.add(current);
+        //output= new Path();
+        while (!backwardsoutput.nodes.isEmpty())
+        {
+            output.add(backwardsoutput.nodes.get(backwardsoutput.size()-1));
+            backwardsoutput.nodes.remove(backwardsoutput.size()-1);
+        }
         return output;
     }
+
+
+
 
     public void drawPath(Path path){
 
