@@ -480,9 +480,9 @@ public class SearchManager {
         }
 
         for(Node node : storage){
-            Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
+            //Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
             if(node.getAliases().contains(term)){
-                Log.d("findSearchTerm","Match found");
+                //Log.d("findSearchTerm","Match found");
                 return node;
             }
         }
