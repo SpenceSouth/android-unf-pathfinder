@@ -472,7 +472,7 @@ public class SearchManager {
 
     private Node findSearchTerm(String term){
 
-        if(term.contains("#")){
+        if(term.contains("#") && closest != null){
             return closest;
         }
 
@@ -483,6 +483,9 @@ public class SearchManager {
                 return node;
             }
         }
+
+        Toast.makeText(mContext, "Search failed on " + term, Toast.LENGTH_SHORT).show();
+
         return null;
     }
 
