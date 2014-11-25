@@ -273,6 +273,7 @@ public class SearchManager {
                     backwardsoutput.nodes.remove(backwardsoutput.size()-1);
                 }
                 */
+                Log.d("debug", "Exiting A* from the right spot");
                 return output;
             }
 
@@ -336,6 +337,7 @@ public class SearchManager {
         Log.d("debug", "Exiting A* from the wrong spot look at brackets");
 
         output=reconstruct_path(start, finish);
+        return output;
     }
 
     public static Path reconstruct_path(Node start, Node finish)
