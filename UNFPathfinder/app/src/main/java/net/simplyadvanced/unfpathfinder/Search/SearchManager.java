@@ -251,8 +251,7 @@ public class SearchManager {
             });
 
             current=openset.get(0);
-            //System.out.println(" Mt Bond is considering "+current.toString()+"It's score is: "+current.f_score);
-
+            Log.d("debug", ("Current is: "+current.getLatLog().toString()));
             if (current==finish)
             {
                 //Path output;
@@ -295,6 +294,7 @@ public class SearchManager {
                     if (!openset.contains(neighbor))
                     {
                         openset.add(neighbor);
+                        Log.d("debug", "Added"+neighbor.getLatLog().toString()+"to open Set");
                         //System.out.println("Mr Bond went from "+current.toString()+" to "+neighbor.toString()+"\n Tenative score is:"+tenGscore);
 
                     }
@@ -302,42 +302,12 @@ public class SearchManager {
 
             }
 
-
-
-
         }
 
-        // todo create path construction method  from A* reconstruct_path();
-        /*
-            public void reconstruct_path()
-            {
-                Node current=myNodes.get(1);
-                Node start=myNodes.get(0);
-                ArrayList<Node> reverse_path= new ArrayList<Node>();
-                ArrayList<Node> forward_path= new ArrayList<Node>();
-                while (current.x!=start.x&&current.y!=start.y)
-                {
-                    reverse_path.add(current);
-                    current=current.cameFrom;
-                }
-                reverse_path.add(current);
 
-                for (int i=reverse_path.size()-1; i>=0; i--)
-                {
-                    forward_path.add(reverse_path.get(i));
-                }
-                System.out.println("the path is:");
-                for (Node step:forward_path)
-                {
-                    System.out.print(step.toString());
-                }
+        Log.d("debug", "Exiting A* from the wrong spot look at brackets"+current.getLatLog().toString());
 
-            }
-
-         */
-        Log.d("debug", "Exiting A* from the wrong spot look at brackets");
-
-        output=reconstruct_path(start, finish);
+        output=reconstruct_path(start, current);
         return output;
     }
 
@@ -349,7 +319,7 @@ public class SearchManager {
         backwardsoutput.add(finish);
         current=finish.getCameFrom();
         //what is the tolerence on LatLng.equals
-        while (!current.getLatLog().toString().equals(start.getLatLog().toString()))
+        while (!(current==start))
         {
             backwardsoutput.add(current);
             current=current.getCameFrom();
