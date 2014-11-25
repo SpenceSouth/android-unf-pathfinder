@@ -178,7 +178,7 @@ public class SearchManager {
                             {
                                 latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
                             }
-                            myNode.addAlias(inputFile[i][j].trim());
+                            myNode.addAlias(inputFile[i][j].toLowerCase().trim());
                         }
                     }
                     storage.add(myNode);
@@ -431,7 +431,7 @@ public class SearchManager {
                     //Starts the search with the input values
                     Log.d("TERM","" + storage.size());
                     dialog.dismiss();
-                    startSearch(findSearchTerm(originInput.getText().toString().trim()), findSearchTerm(destinationInput.getText().toString().trim()));
+                    startSearch(findSearchTerm(originInput.getText().toString().toLowerCase().trim()), findSearchTerm(destinationInput.getText().toString().toLowerCase().trim()));
                 }
             });
 
@@ -450,11 +450,9 @@ public class SearchManager {
                 //Find the closest node
                 for(Node node : storage){
                     distance = LocationUtils.calculateDistance(node.getLatLog().latitude, node.getLatLog().longitude, currentPosition.latitude, currentPosition.longitude);
-                    Log.d("UsingGPS","Distance: " + distance);
 
                     if(distance < shortestDistance){
                         shortestDistance = distance;
-                        Log.d("UsingGPS","Shortest distance is: " + shortestDistance);
                         closest = node;
                     }
                 }
