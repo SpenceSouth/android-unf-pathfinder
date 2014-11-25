@@ -48,6 +48,7 @@ public class SearchManager {
     boolean flag = false;
     private Lock lock = new ReentrantLock();
     private Semaphore semaphore = new Semaphore(1);
+    Node closest = null;
 
     private SearchManager(){
         loadNodes();
@@ -430,6 +431,7 @@ public class SearchManager {
 
                     //Starts the search with the input values
                     Log.d("TERM","" + storage.size());
+
                     dialog.dismiss();
                     startSearch(findSearchTerm(originInput.getText().toString().toLowerCase().trim()), findSearchTerm(destinationInput.getText().toString().toLowerCase().trim()));
                 }
@@ -442,7 +444,6 @@ public class SearchManager {
             public void onClick(View v) {
                 Toast.makeText(mContext, "Finding closest data point", Toast.LENGTH_SHORT).show();
 
-                Node closest = null;
                 double distance;
                 double shortestDistance = 10000;
                 LatLng currentPosition = LocationUtils.getCurrentPosition(mContext);
@@ -458,7 +459,7 @@ public class SearchManager {
                 }
 
                 //Send node to output box
-                originInput.setText(currentPosition.toString());
+                originInput.setText("#" + currentPosition.toString());
 
 
 
@@ -470,6 +471,11 @@ public class SearchManager {
     }
 
     private Node findSearchTerm(String term){
+
+        if(term.contains("#")){
+            return closest;
+        }
+
         for(Node node : storage){
             Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
             if(node.getAliases().contains(term)){
