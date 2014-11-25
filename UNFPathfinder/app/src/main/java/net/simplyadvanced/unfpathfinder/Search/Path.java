@@ -68,4 +68,12 @@ public class Path {
 
         return Double.parseDouble(df.format(time));
     }
+
+    public String toString(){
+        String result = "";
+        for (Node node : nodes){
+            result += node.toString() + ", ";
+        }
+        return result;
+    }
 }

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.location.Location;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -177,7 +178,7 @@ public class SearchManager {
                             {
                                 latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
                             }
-                            myNode.addAlias(inputFile[i][j]);
+                            myNode.addAlias(inputFile[i][j].toLowerCase().trim());
                         }
                     }
                     storage.add(myNode);
@@ -461,7 +462,7 @@ public class SearchManager {
                     //Starts the search with the input values
                     Log.d("TERM","" + storage.size());
                     dialog.dismiss();
-                    startSearch(findSearchTerm(originInput.getText().toString().trim()), findSearchTerm(destinationInput.getText().toString().trim()));
+                    startSearch(findSearchTerm(originInput.getText().toString().toLowerCase().trim()), findSearchTerm(destinationInput.getText().toString().toLowerCase().trim()));
                 }
             });
 
@@ -470,8 +471,28 @@ public class SearchManager {
         gpsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alert.cancel();
                 Toast.makeText(mContext, "Finding closest data point", Toast.LENGTH_SHORT).show();
+
+                Node closest = null;
+                double distance;
+                double shortestDistance = 10000;
+                LatLng currentPosition = LocationUtils.getCurrentPosition(mContext);
+
+                //Find the closest node
+                for(Node node : storage){
+                    distance = LocationUtils.calculateDistance(node.getLatLog().latitude, node.getLatLog().longitude, currentPosition.latitude, currentPosition.longitude);
+
+                    if(distance < shortestDistance){
+                        shortestDistance = distance;
+                        closest = node;
+                    }
+                }
+
+                //Send node to output box
+                originInput.setText(currentPosition.toString());
+
+
+
             }
         });
 
@@ -481,7 +502,9 @@ public class SearchManager {
 
     private Node findSearchTerm(String term){
         for(Node node : storage){
+            Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
             if(node.getAliases().contains(term)){
+                Log.d("findSearchTerm","Match found");
                 return node;
             }
         }
@@ -603,13 +626,15 @@ public class SearchManager {
         //Clear the map before drawing over it again.
         mMap.clear();
 
-        final Path path = createFakePath();             //TODO: Replace createFakePath with the call with the path from A*(start, end)
-        new Thread(){
+        final Path path = aStar(start, end);             //TODO: Replace createFakePath with the call with the path from A*(start, end)
+        Log.d("generatePath",path.toString());
+        Log.d("generatePath","Size: " + path.size());
+        /*new Thread(){
             @Override
-            public void run(){
+            public void run(){*/
                 drawPath(path);
-            }
-        }.run();
+            /*}
+        }.run();*/
 
         //Center path if necessary
         LatLng midpoint = LocationUtils.getMidpoint(start.getLatLog(), end.getLatLog());
