@@ -70,10 +70,50 @@ public class Path {
     }
 
     public String toString(){
-        String result = "";
+       /* String result = "";
         for (Node node : nodes){
             result += node.toString() + ", ";
         }
-        return result;
+
+        result += " " + getPathDistance();*/
+
+        return nodes.toString();
+    }
+
+    /**Returns the total distance of the traveled path */
+    public double getHeuristicsDistance(Node goal){
+
+        double total = 0;
+
+        for(int i = 0; i < nodes.size()-1; i++){
+            total += LocationUtils.calculateDistance(nodes.get(i), nodes.get(i+1));
+        }
+
+        total += LocationUtils.calculateDistance(getLastNode(), goal);
+
+        return total;
+    }
+
+    public Node getLastNode(){
+        return nodes.get(nodes.size()-1);
+    }
+
+    public boolean isFinished(Node goal){
+        return (getLastNode().toString().equals(goal.toString()));
+    }
+
+    public void copy(Path path){
+        for(int i = 0; i < path.size(); i++){
+            nodes.add(path.getNode(i));
+        }
+    }
+
+    public boolean contains(Node node){
+        for(int i = 0; i < nodes.size(); i++){
+            if(nodes.get(i).toString().equals(node.toString())){
+                return true;
+            }
+        }
+        return false;
     }
 }
