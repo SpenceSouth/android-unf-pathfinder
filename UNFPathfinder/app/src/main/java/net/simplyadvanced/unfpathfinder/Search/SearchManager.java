@@ -278,6 +278,7 @@ public class SearchManager {
 
             current=openset.get(0);
             Log.d("debug", ("Current is: "+current.getLatLog().toString()));
+
             if (current==finish)
             {
                 //Path output;
@@ -299,6 +300,7 @@ public class SearchManager {
                     backwardsoutput.nodes.remove(backwardsoutput.size()-1);
                 }
                 */
+                
                 Log.d("debug", "Exiting A* from the right spot");
                 return output;
             }
@@ -309,7 +311,7 @@ public class SearchManager {
             for (Node neighbor: current.getAdjacency())
             {
                 if (closedset.contains(neighbor))continue;
-                tenGscore=current.getG_score()+current.getDistanceTo(finish);
+                tenGscore=current.getG_score()+current.getDistanceTo(neighbor);
 
                 if (!openset.contains(neighbor)||tenGscore<current.getG_score())
                 {
