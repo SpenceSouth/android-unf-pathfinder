@@ -84,7 +84,7 @@ public class SearchManager {
         //done todo designate targetfile
        // String targetFile="rawNodestxt";
         String[] inputArray;
-        String[][] inputFile=new String[1][1];
+        String[][] inputFile;
         ArrayList<String> inputList = new ArrayList<String>();
         String[] latlongStrings=new String[1];
         double lat;
@@ -134,9 +134,17 @@ public class SearchManager {
             inputFile = new String[inputArray.length][];
             for (int i=0; i<inputArray.length; i++)
             {
+
+                String test="";
                 inputFile[i]=inputArray[i].split(";");
+                for (int j=0; j<inputFile[i].length; j++)
+                {
+                    test+=inputFile[i][j]+"/";
+
+                }
+                Log.d("debug", "Lines tokenized by semicolons Line is: "+test);
+
             }
-        Log.d("debug", "Lines tokenized by semicolons");
 
             //int pants=0;
 
@@ -170,7 +178,11 @@ public class SearchManager {
                             coordinates=nodeCoords(inputFile[i][j]);
                             for (Node otherNode: storage )
                             {
-                                if (otherNode.getLatLog().equals(coordinates)) {myNode.setAdjacent(otherNode);}
+                                if (otherNode.getLatLog().toString().equals(coordinates.toString()))
+                                {
+                                    Log.d("debug", "Ajacency:"+myNode.toString()+" "+otherNode.toString());
+                                    myNode.setAdjacent(otherNode);
+                                }
                             }
                         }
                         catch (NumberFormatException n)
@@ -183,10 +195,10 @@ public class SearchManager {
                         }
                     }
                     storage.add(myNode);
-                    Log.d("debug", ("InputFile["+i+"][0] added a node lat: "+lat+" lng: "+log));
+                    Log.d("debug", ("Added node: "+myNode.toString()));
                 }
             }
-            Log.d("debug", "out of the if");
+            //Log.d("debug", "out of the if");
             //TODO:  Never makes it outside of the if statement above
 
 
