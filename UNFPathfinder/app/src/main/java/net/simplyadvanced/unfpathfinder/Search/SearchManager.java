@@ -309,7 +309,7 @@ public class SearchManager {
             for (Node neighbor: current.getAdjacency())
             {
                 if (closedset.contains(neighbor))continue;
-                tenGscore=current.getG_score()+current.getDistanceTo(neighbor);
+                tenGscore=current.getG_score()+current.getDistanceTo(finish);
 
                 if (!openset.contains(neighbor)||tenGscore<current.getG_score())
                 {
