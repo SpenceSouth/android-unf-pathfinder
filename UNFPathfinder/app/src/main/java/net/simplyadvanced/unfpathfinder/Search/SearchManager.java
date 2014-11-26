@@ -399,11 +399,11 @@ public class SearchManager {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!checkEntry(destinationInput.getText().toString().toLowerCase())){
-                    destinationInput.setTextColor(Color.RED);
+                if(!checkEntry(originInput.getText().toString().toLowerCase())){
+                    originInput.setTextColor(Color.RED);
                 }
                 else{
-                    destinationInput.setTextColor(Color.GREEN);
+                    originInput.setTextColor(Color.GREEN);
                 }
             }
 
