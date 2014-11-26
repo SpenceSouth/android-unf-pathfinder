@@ -70,14 +70,14 @@ public class Path {
     }
 
     public String toString(){
-        String result = "";
+       /* String result = "";
         for (Node node : nodes){
             result += node.toString() + ", ";
         }
 
-        result += " " + getPathDistance();
+        result += " " + getPathDistance();*/
 
-        return result;
+        return nodes.toString();
     }
 
     /**Returns the total distance of the traveled path */
@@ -104,7 +104,7 @@ public class Path {
 
     public void copy(Path path){
         for(int i = 0; i < path.size(); i++){
-            nodes.add(new Node(path.getNode(i).getLatLog()));
+            nodes.add(path.getNode(i));
         }
     }
 

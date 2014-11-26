@@ -119,11 +119,11 @@ public class Node implements Comparable{
     @Override
     public String toString(){
         String next="";
-        for (Node myNeigbor:adjacency)
+        /*for (Node myNeigbor:adjacency)
         {
             next+=("Neighbor: "+myNeigbor.getLatLog().toString()+" \n");
-        }
-        return getTitle() + " " + mLatlog.toString()+"\n"+next;
+        }*/
+        return Integer.toString(number);
     }
 
     public void setRawAdjacency (String[] input) {rawAdjacency=input;}

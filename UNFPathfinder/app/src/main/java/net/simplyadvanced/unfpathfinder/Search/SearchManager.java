@@ -49,7 +49,7 @@ public class SearchManager {
     private Lock lock = new ReentrantLock();
     private Semaphore semaphore = new Semaphore(1);
     private Node closest = null;
-    private static ArrayList<Path> paths = new ArrayList<Path>();
+    private static ArrayList<Path> paths;
 
     private SearchManager(){
         loadNodes();
@@ -244,6 +244,9 @@ public class SearchManager {
     //passed from aaron's A* project
     public static Path aStar(Node start, Node finish) {
 
+        //Reset ArrayList
+        paths = new ArrayList<Path>();
+
         Path path = new Path();
         path.add(start);
         addPath(path, finish);
@@ -251,12 +254,9 @@ public class SearchManager {
         //ArrayList<Node> ad;
         int count = 0;
 
-        while(!current.isFinished(finish)){
+        Log.d("Optimal Path","Goal node is " + finish.getNumber());
 
-            //Log.d("Optimal path", "Current.getLastNode(): " + current.getLastNode().toString());
-            //Log.d("Optimal path", "Current's Adjacencies: " + current.getLastNode().getAdjacency().toString());
-            //ad = current.getLastNode().getAdjacency();
-            //Log.d("Optimal path", "Alt Current's Adjacencies: " + ad.toString());
+        while(!current.isFinished(finish)){
 
             //Make a new path for each adjacency
             for(int i = 0; i < current.getLastNode().getAdjacency().size(); i++){
@@ -267,18 +267,21 @@ public class SearchManager {
 
                 //Copy the old path and add the adjacency to a new one to be added to paths
                 p.copy(current);
-                Log.d("Optimal Path", current.toString());
                 p.add(current.getLastNode().getAdjacency().get(i));
-                Log.d("Optimal Path", current.toString());
+                //Log.d("Optimal Path", "Added " + current.getLastNode().getAdjacency().get(i) + " to the path " + p.toString());
+
                 addPath(p, finish);
             }
 
+            //Remove the path that was just expanded
+            paths.remove(current);
+
             //Update current to the shortest path
             current = paths.get(0);
-            Log.d("Optimal Path", current.toString());
-            Log.d("Optimal Path", "Paths size: " + paths.size());
+            //Log.d("Optimal Path", "Shorest path is " + current.toString());
+            Log.d("Optimal Path", paths.toString());
 
-            if(count++ == 5) break;
+            //if(count++ == 5) break;
 
         }
 
