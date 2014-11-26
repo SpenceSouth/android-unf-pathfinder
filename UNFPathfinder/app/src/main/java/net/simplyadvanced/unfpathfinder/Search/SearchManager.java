@@ -280,6 +280,10 @@ public class SearchManager {
             //Update current to the shortest path
             current = paths.get(0);
 
+            if(numberOfPaths % 250 == 0){
+                Log.d("Performance","Number of paths " + numberOfPaths);
+            }
+
         }
 
         Log.d("Performance","Paths generated: " + numberOfPaths);
@@ -448,9 +452,6 @@ public class SearchManager {
                 .setPositiveButton("Let's go!", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        //Starts the search with the input values
-                        Log.d("TERM", "" + storage.size());
 
                         dialog.dismiss();
                         startSearch(findSearchTerm(originInput.getText().toString().toLowerCase().trim()), findSearchTerm(destinationInput.getText().toString().toLowerCase().trim()));
@@ -624,7 +625,13 @@ public class SearchManager {
         //Clear the map before drawing over it again.
         mMap.clear();
 
+        //Easter Egg
+        if(start.getAliases().contains("the shire") && end.getAliases().contains("mordor")){
+            Toast.makeText(mContext, "One does not simply walk into Mordor", Toast.LENGTH_SHORT).show();
+        }
+
         final Path path = aStar(start, end);             //TODO: Replace createFakePath with the call with the path from A*(start, end)
+
         Log.d("generatePath", path.toString());
         Log.d("generatePath", "Size: " + path.size());
         /*new Thread(){
@@ -673,6 +680,10 @@ public class SearchManager {
     }
 
     private boolean checkEntry(String input){
+
+        if(input.contains("#")){
+            return true;
+        }
 
         for (Node node : storage) {
             //Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
