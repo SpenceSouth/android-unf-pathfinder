@@ -29,10 +29,7 @@ public class Node implements Comparable{
     public Node(){
 
     }
-    public void setRawAdjacency (String[] input) {rawAdjacency=input;}
-    public String[] getRawAdjacency () {return rawAdjacency;}
-    public void setNumber (int input) {number=input;}
-    public int getNumber() {return number;}
+
     public double getG_score(){ return g_score;}
     public void setG_score(double input) {g_score=input;}
     public double getF_score(){ return f_score;}
@@ -50,7 +47,7 @@ public class Node implements Comparable{
     }
 
     public Node(LatLng latLng){
-        Log.d("Node",this.toString());
+        //Log.d("Node",this.toString());
         mLatlog = latLng;
     }
 
@@ -82,6 +79,7 @@ public class Node implements Comparable{
     }
 
     public ArrayList<Node> getAdjacency() {return adjacency;}
+
     public void setAdjacent(Node otherNode)
     {
         if (!adjacency.contains(otherNode))
@@ -120,11 +118,18 @@ public class Node implements Comparable{
     @Override
     public String toString(){
         String next="";
-        for (Node myNeigbor:adjacency)
+        /*for (Node myNeigbor:adjacency)
         {
             next+=("Neighbor: "+myNeigbor.getLatLog().toString()+" \n");
-        }
-        return getTitle() + " " + mLatlog.toString()+"\n"+next;
+        }*/
+        return Integer.toString(number);
     }
+
+    public void setRawAdjacency (String[] input) {rawAdjacency=input;}
+
+    public String[] getRawAdjacency () {return rawAdjacency;}
+
+    public void setNumber (int input) {number=input;}
+    public int getNumber() {return number;}
 
 }

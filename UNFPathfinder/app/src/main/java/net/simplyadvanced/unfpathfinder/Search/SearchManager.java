@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Location;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.BaseKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -48,7 +51,8 @@ public class SearchManager {
     boolean flag = false;
     private Lock lock = new ReentrantLock();
     private Semaphore semaphore = new Semaphore(1);
-    Node closest = null;
+    private Node closest = null;
+    private static ArrayList<Path> paths;
 
     private SearchManager(){
         loadNodes();
@@ -82,7 +86,7 @@ public class SearchManager {
 
     public void loadNodes(){
         //done todo designate targetfile
-       // String targetFile="rawNodestxt";
+        // String targetFile="rawNodestxt";
         String[] inputArray;
         String[][] inputFile;
         ArrayList<String> inputList = new ArrayList<String>();
@@ -130,23 +134,23 @@ public class SearchManager {
 
 
         Log.d("debug", "processing inputs");
-            inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
-            inputFile = new String[inputArray.length][];
-            for (int i=0; i<inputArray.length; i++)
+        inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
+        inputFile = new String[inputArray.length][];
+        for (int i=0; i<inputArray.length; i++)
+        {
+
+            String test="";
+            inputFile[i]=inputArray[i].split(";");
+            for (int j=0; j<inputFile[i].length; j++)
             {
-
-                String test="";
-                inputFile[i]=inputArray[i].split(";");
-                for (int j=0; j<inputFile[i].length; j++)
-                {
-                    test+=inputFile[i][j]+"/";
-
-                }
-                Log.d("debug", "Lines tokenized by semicolons Line is: "+test);
+                test+=inputFile[i][j]+"/";
 
             }
+            Log.d("debug", "Lines tokenized by semicolons Line is: "+test);
 
-            //int pants=0;
+        }
+
+        //int pants=0;
 
         for (int i=0; i<inputFile.length; i++) {
             //ignore commented lines
@@ -300,7 +304,7 @@ public class SearchManager {
                     backwardsoutput.nodes.remove(backwardsoutput.size()-1);
                 }
                 */
-                
+
                 Log.d("debug", "Exiting A* from the right spot");
                 return output;
             }
@@ -363,23 +367,21 @@ public class SearchManager {
     }
 
 
-
-
-    public void drawPath(Path path){
+    public void drawPath(Path path) {
 
         String message = "Walking time: " + path.getWalkingTime() + " minutes\n";
         message += "Distance: " + path.getPathDistance() + " miles";
 
         //Draws path on map
-        for(int i = 0; i < path.size()-1; i++){
+        for (int i = 0; i < path.size() - 1; i++) {
             line = mMap.addPolyline(new PolylineOptions()
-                    .add(path.getNode(i).getLatLog(), path.getNode(i+1).getLatLog())
+                    .add(path.getNode(i).getLatLog(), path.getNode(i + 1).getLatLog())
                     .width(8).color(Color.BLUE)
                     .geodesic(true));
         }
 
         //Display ending point with walking time and distances
-        Log.d("DrawPath",message);
+        Log.d("DrawPath", message);
 
         //TODO: Have title pull form the destination list
         marker = mMap.addMarker(new MarkerOptions()
@@ -389,23 +391,23 @@ public class SearchManager {
 
     }
 
-    public void drawPathSlowly(Path path){
+    public void drawPathSlowly(Path path) {
 
         String message = "Walking time: " + path.getWalkingTime() + " minutes\n";
         message += "Distance: " + path.getPathDistance() + " miles";
 
         //Draws path on map
-        for(int i = 0; i < path.size()-1; i++){
+        for (int i = 0; i < path.size() - 1; i++) {
 
-            draw(path.getNode(i).getLatLog(), path.getNode(i+1).getLatLog());
+            draw(path.getNode(i).getLatLog(), path.getNode(i + 1).getLatLog());
 
-            Log.d("Map","Drew first line" + i);
+            Log.d("Map", "Drew first line" + i);
         }
 
         //Display ending point with walking time and distances
-        Log.d("DrawPath",message);
+        Log.d("DrawPath", message);
 
-        Log.d("Map","About to enter marker");
+        Log.d("Map", "About to enter marker");
 
         //TODO: Have title pull form the destination list
         marker = mMap.addMarker(new MarkerOptions()
@@ -413,11 +415,11 @@ public class SearchManager {
                 .title("Destination: " + path.getEndingNode().getTitle())
                 .snippet(message));
 
-        Log.d("Map","Exited marker");
+        Log.d("Map", "Exited marker");
 
     }
 
-    private void draw(LatLng a, LatLng b){
+    private void draw(LatLng a, LatLng b) {
 
         mMap.addPolyline(new PolylineOptions()
                 .add(a, b)
@@ -425,18 +427,17 @@ public class SearchManager {
                 .geodesic(true));
         try {
             Thread.sleep(200);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             Toast.makeText(mContext, "No sleep for the weary", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    public void clearMap(){
+    public void clearMap() {
         mMap.clear();
     }
 
-    public void openSearchMenu(final Activity activity){
+    public void openSearchMenu(final Activity activity) {
 
         final View inflatedView = activity.getLayoutInflater().inflate(R.layout.search_menu, null);
 
@@ -445,28 +446,69 @@ public class SearchManager {
         final EditText originInput = (EditText) inflatedView.findViewById(R.id.origin_input);
         final Button gpsButton = (Button) inflatedView.findViewById(R.id.calculate_origin_button);
 
+        originInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!checkEntry(originInput.getText().toString().toLowerCase())){
+                    originInput.setTextColor(Color.RED);
+                }
+                else{
+                    originInput.setTextColor(Color.GREEN);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        destinationInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!checkEntry(destinationInput.getText().toString().toLowerCase())){
+                    destinationInput.setTextColor(Color.RED);
+                }
+                else{
+                    destinationInput.setTextColor(Color.GREEN);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(activity)
-            .setTitle("Destination Search")
-            .setMessage("Enter in your starting origin and your destination to calculate the route")
-            .setView(inflatedView)
-            .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                .setTitle("Destination Search")
+                .setMessage("Enter in your starting origin and your destination to calculate the route")
+                .setView(inflatedView)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                }
-            })
-            .setPositiveButton("Let's go!", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setPositiveButton("Let's go!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                    //Starts the search with the input values
-                    Log.d("TERM","" + storage.size());
-
-                    dialog.dismiss();
-                    startSearch(findSearchTerm(originInput.getText().toString().toLowerCase().trim()), findSearchTerm(destinationInput.getText().toString().toLowerCase().trim()));
-                }
-            });
+                        dialog.dismiss();
+                        startSearch(findSearchTerm(originInput.getText().toString().toLowerCase().trim()), findSearchTerm(destinationInput.getText().toString().toLowerCase().trim()));
+                    }
+                });
 
         final AlertDialog alert = dialog.create();
 
@@ -480,10 +522,10 @@ public class SearchManager {
                 LatLng currentPosition = LocationUtils.getCurrentPosition(mContext);
 
                 //Find the closest node
-                for(Node node : storage){
+                for (Node node : storage) {
                     distance = LocationUtils.calculateDistance(node.getLatLog().latitude, node.getLatLog().longitude, currentPosition.latitude, currentPosition.longitude);
 
-                    if(distance < shortestDistance){
+                    if (distance < shortestDistance) {
                         shortestDistance = distance;
                         closest = node;
                     }
@@ -493,7 +535,6 @@ public class SearchManager {
                 originInput.setText("#" + currentPosition.toString());
 
 
-
             }
         });
 
@@ -501,15 +542,15 @@ public class SearchManager {
 
     }
 
-    private Node findSearchTerm(String term){
+    private Node findSearchTerm(String term) {
 
-        if(term.contains("#") && closest != null){
+        if (term.contains("#") && closest != null) {
             return closest;
         }
 
-        for(Node node : storage){
+        for (Node node : storage) {
             //Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
-            if(node.getAliases().contains(term)){
+            if (node.getAliases().contains(term)) {
                 //Log.d("findSearchTerm","Match found");
                 return node;
             }
@@ -520,18 +561,19 @@ public class SearchManager {
         return null;
     }
 
-    /**After path is created by  Astar */
-    private void startSearch(Node start, Node end){
-        if(start == null || end == null){
+    /**
+     * After path is created by  Astar
+     */
+    private void startSearch(Node start, Node end) {
+        if (start == null || end == null) {
             Toast.makeText(mContext, "Search failed", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             generatePath(start, end);
         }
     }
 
     //TODO: For debugging purposes only
-    private static void addDebuggingNodes(){
+    private static void addDebuggingNodes() {
         Node starting = new Node(30.271483, -81.509146);
         starting.addAlias("Student Union");
         starting.addAlias("SU");
@@ -582,7 +624,7 @@ public class SearchManager {
     }
 
     //TODO: For debugging purposes only
-    private Path createFakePath(){
+    private Path createFakePath() {
 
         Path path = new Path();
         path.add(new LatLng(30.271483, -81.509146));
@@ -630,18 +672,24 @@ public class SearchManager {
     }
 
 
-    private void generatePath(Node start, Node end){
+    private void generatePath(Node start, Node end) {
 
         //Clear the map before drawing over it again.
         mMap.clear();
 
+        //Easter Egg
+        if(start.getAliases().contains("the shire") && end.getAliases().contains("mordor")){
+            Toast.makeText(mContext, "One does not simply walk into Mordor", Toast.LENGTH_SHORT).show();
+        }
+
         final Path path = aStar(start, end);             //TODO: Replace createFakePath with the call with the path from A*(start, end)
-        Log.d("generatePath",path.toString());
-        Log.d("generatePath","Size: " + path.size());
+
+        Log.d("generatePath", path.toString());
+        Log.d("generatePath", "Size: " + path.size());
         /*new Thread(){
             @Override
             public void run(){*/
-                drawPath(path);
+        drawPath(path);
             /*}
         }.run();*/
 
@@ -650,4 +698,55 @@ public class SearchManager {
         MapCenteringUtils.mapMoveAndZoomTo(mMap, midpoint, 18);
     }
 
+
+    private static void addPath(Path path, Node goal) {
+
+        int size = paths.size();
+
+        if (paths.size() == 0) {
+            paths.add(path);
+        }
+        else {
+            for (int i = 0; i < size; i++) {
+                if (path.getHeuristicsDistance(goal) < paths.get(i).getHeuristicsDistance(goal)) {
+                    if (i == 0) {
+                        paths.add(0, path);
+                        return;
+                    } else {
+                        paths.add(i, path);
+                        return;
+                    }
+                } else if (path.getHeuristicsDistance(goal) == paths.get(i).getHeuristicsDistance(goal)) {
+                    paths.add(i, path);
+                    return;
+                }
+                //Is the last path to compare against
+                else if (i == size - 1) {
+                    paths.add(path);
+                    return;
+                }
+            }
+        }
+
+
+    }
+
+    private boolean checkEntry(String input){
+
+        if(input.contains("#")){
+            return true;
+        }
+
+        for (Node node : storage) {
+            //Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
+            if (node.getAliases().contains(input)) {
+                Log.d("CheckEntry","Match found for " + input);
+                return true;
+            }
+        }
+        Log.d("CheckEntry","Match not found for " + input);
+
+        return false;
+
+    }
 }
