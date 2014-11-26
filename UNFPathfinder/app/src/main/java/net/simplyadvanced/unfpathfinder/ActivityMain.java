@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -31,6 +34,7 @@ public class ActivityMain extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
+        setupListeners();
     }
 
     @Override
@@ -55,7 +59,7 @@ public class ActivityMain extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case(R.id.search):
-                mSearchManager.openSearchMenu(this);
+                mSearchManager.openSearchMenu();
                 return true;
             case(R.id.clear):
                 mSearchManager.clearMap();
@@ -94,7 +98,7 @@ public class ActivityMain extends FragmentActivity {
 
         //Center the map on UNF
         MapCenteringUtils.mapMoveAndZoomTo(mMap, new LatLng(30.268602, -81.507744), 16);
-        mSearchManager = SearchManager.getInstance(mMap, getApplicationContext());
+        mSearchManager = SearchManager.getInstance(mMap, getApplicationContext(), this);
 
         mUserPrefs = UserPrefs.getInstance();
 
@@ -182,5 +186,17 @@ public class ActivityMain extends FragmentActivity {
                         mUserPrefs.saveEulaPref(true);
                     }
                 }).show();
+    }
+
+    private void setupListeners(){
+
+        //Get values from EditText fields
+        final Button search = (Button) findViewById(R.id.search_button);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchManager.openSearchMenu();
+            }
+        });
     }
 }

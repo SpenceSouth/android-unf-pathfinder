@@ -53,6 +53,7 @@ public class SearchManager {
     private Semaphore semaphore = new Semaphore(1);
     private Node closest = null;
     private static ArrayList<Path> paths;
+    private static Activity mActivity;
 
     private SearchManager(){
         loadNodes();
@@ -69,12 +70,13 @@ public class SearchManager {
         return mSearchManager;
     }
 
-    public static SearchManager getInstance(GoogleMap map, Context context){
+    public static SearchManager getInstance(GoogleMap map, Context context, Activity activity){
         Log.d("SearchManager","creating");
         if(mSearchManager == null){
             mMap = map;
             mMap.clear();
             mContext = context;
+            mActivity = activity;
             mSearchManager = new SearchManager();
 
             //TODO: Delete this when done with debugging
@@ -437,9 +439,9 @@ public class SearchManager {
         mMap.clear();
     }
 
-    public void openSearchMenu(final Activity activity) {
+    public void openSearchMenu() {
 
-        final View inflatedView = activity.getLayoutInflater().inflate(R.layout.search_menu, null);
+        final View inflatedView = mActivity.getLayoutInflater().inflate(R.layout.search_menu, null);
 
         //Get values from EditText fields
         final EditText destinationInput = (EditText) inflatedView.findViewById(R.id.destination_input);
@@ -491,7 +493,7 @@ public class SearchManager {
         });
 
 
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(activity)
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity)
                 .setTitle("Destination Search")
                 .setMessage("Enter in your starting origin and your destination to calculate the route")
                 .setView(inflatedView)
