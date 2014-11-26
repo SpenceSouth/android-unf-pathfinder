@@ -162,13 +162,15 @@ public class SearchManager {
                     Log.d("debug", "Got a line with a node");
 
                     latlongStrings = inputFile[i][0].split("\\s+", 2);
-                    lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
+                    lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-1));//removes comma after lattitude
                     if (latlongStrings[1].contains(";"))
                     {
                         latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
                     }
                     log=Double.parseDouble(latlongStrings[1]);
                     myNode=new Node (lat, log);
+                    myNode.setRawAdjacency(inputFile[i]);
+                    myNode.setNumber(i);//this may be useless after troubleshooting
 
                     for (int j=1; j<inputFile[i].length; j++)
                     {
@@ -187,10 +189,7 @@ public class SearchManager {
                         }
                         catch (NumberFormatException n)
                         {
-                            if (latlongStrings[1].contains(";"))
-                            {
-                                latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
-                            }
+
                             myNode.addAlias(inputFile[i][j].toLowerCase().trim());
                         }
                     }
@@ -203,6 +202,21 @@ public class SearchManager {
 
 
 
+        }
+
+        for (Node oneNode: storage)//Ugly ugly hack
+        {
+            for (String oneToken: oneNode.getRawAdjacency())
+            {
+                for (Node anotherNode: storage)
+                {
+                    if (oneToken.equals(anotherNode.getRawAdjacency()[0]))
+                    {
+                        oneNode.setAdjacent(anotherNode);
+                        anotherNode.setAdjacent(oneNode);
+                    }
+                }
+            }
         }
     }
 

@@ -23,12 +23,16 @@ public class Node implements Comparable{
     private double f_score;
     private Node cameFrom;
     private double distance;
-
+    private String[] rawAdjacency;
+    private int number;
 
     public Node(){
 
     }
-
+    public void setRawAdjacency (String[] input) {rawAdjacency=input;}
+    public String[] getRawAdjacency () {return rawAdjacency;}
+    public void setNumber (int input) {number=input;}
+    public int getNumber() {return number;}
     public double getG_score(){ return g_score;}
     public void setG_score(double input) {g_score=input;}
     public double getF_score(){ return f_score;}
