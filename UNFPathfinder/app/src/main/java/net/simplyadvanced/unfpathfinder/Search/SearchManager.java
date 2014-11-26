@@ -51,24 +51,24 @@ public class SearchManager {
     private Node closest = null;
     private static ArrayList<Path> paths = new ArrayList<Path>();
 
-    private SearchManager() {
+    private SearchManager(){
         loadNodes();
     }
 
-    public Context getContext() {
+    public Context getContext(){
         return mContext;
     }
 
-    public static SearchManager getInstance() {
-        if (mSearchManager == null) {
+    public static SearchManager getInstance(){
+        if(mSearchManager == null){
             mSearchManager = new SearchManager();
         }
         return mSearchManager;
     }
 
-    public static SearchManager getInstance(GoogleMap map, Context context) {
-        Log.d("SearchManager", "creating");
-        if (mSearchManager == null) {
+    public static SearchManager getInstance(GoogleMap map, Context context){
+        Log.d("SearchManager","creating");
+        if(mSearchManager == null){
             mMap = map;
             mMap.clear();
             mContext = context;
@@ -81,26 +81,29 @@ public class SearchManager {
         return mSearchManager;
     }
 
-    public void loadNodes() {
+    public void loadNodes(){
         //done todo designate targetfile
         // String targetFile="rawNodestxt";
         String[] inputArray;
-        String[][] inputFile = new String[1][1];
+        String[][] inputFile;
         ArrayList<String> inputList = new ArrayList<String>();
-        String[] latlongStrings = new String[1];
+        String[] latlongStrings=new String[1];
         double lat;
         double log;
         Node myNode;
         LatLng coordinates;
         InputStream myInputStream;
 
-        try {
+        try
+        {
 
             myInputStream = mContext.getResources().openRawResource(R.raw.rawnodes);
             Log.d("debug", "The file was found");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             // Catch exception if any
-            Toast.makeText(mContext, "The file was not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext,"The file was not found", Toast.LENGTH_SHORT).show();
             //System.err.println("Error: " + e.getMessage()+"\n");
             Log.d("debug", "The file was not found");
 
@@ -118,7 +121,9 @@ public class SearchManager {
                     inputList.add(inputString);
                 }
             }
-        } catch (IOException s) {
+        }
+        catch (IOException s)
+        {
             Log.d("debug", "IOException");
             Log.d("debug", s.getMessage());
             Log.d("debug", s.getStackTrace().toString());
@@ -128,72 +133,96 @@ public class SearchManager {
         Log.d("debug", "processing inputs");
         inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
         inputFile = new String[inputArray.length][];
-        for (int i = 0; i < inputArray.length; i++) {
-            inputFile[i] = inputArray[i].split(";");
+        for (int i=0; i<inputArray.length; i++)
+        {
+
+            String test="";
+            inputFile[i]=inputArray[i].split(";");
+            for (int j=0; j<inputFile[i].length; j++)
+            {
+                test+=inputFile[i][j]+"/";
+
+            }
+            Log.d("debug", "Lines tokenized by semicolons Line is: "+test);
+
         }
-        Log.d("debug", "Lines tokenized by semicolons");
 
         //int pants=0;
 
-        for (int i = 0; i < inputFile.length; i++) {
+        for (int i=0; i<inputFile.length; i++) {
             //ignore commented lines
-            if (!inputFile[i][0].equals("")) ;
+            if(!inputFile[i][0].equals(""));
             {
-                if (inputFile[i][0].substring(0, 1).equals("//")) {
-                    Log.d("debug", "InputFile[" + i + "][0] is empty");
+                if (inputFile[i][0].substring(0, 1).equals("//"))
+                {
+                    Log.d("debug", "InputFile["+i+"][0] is empty");
                     continue;
-                } else {
+                }
+                else
+                {
                     Log.d("debug", "Got a line with a node");
 
                     latlongStrings = inputFile[i][0].split("\\s+", 2);
-                    lat = Double.parseDouble(latlongStrings[0].substring(0, latlongStrings[0].length() - 2));//removes comma after lattitude
-                    if (latlongStrings[1].contains(";")) {
-                        latlongStrings[1] = latlongStrings[1].substring(0, latlongStrings[1].length() - 2); //removes semicolen
+                    lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
+                    if (latlongStrings[1].contains(";"))
+                    {
+                        latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
                     }
-                    log = Double.parseDouble(latlongStrings[1]);
-                    myNode = new Node(lat, log);
+                    log=Double.parseDouble(latlongStrings[1]);
+                    myNode=new Node (lat, log);
 
-                    for (int j = 1; j < inputFile[i].length; j++) {
+                    for (int j=1; j<inputFile[i].length; j++)
+                    {
                         //todo need a cleaner way to check if numeric or a name
-                        try {
-                            coordinates = nodeCoords(inputFile[i][j]);
-                            for (Node otherNode : storage) {
-                                if (otherNode.getLatLog().equals(coordinates)) {
+                        try
+                        {
+                            coordinates=nodeCoords(inputFile[i][j]);
+                            for (Node otherNode: storage )
+                            {
+                                if (otherNode.getLatLog().toString().equals(coordinates.toString()))
+                                {
+                                    Log.d("debug", "Ajacency:"+myNode.toString()+" "+otherNode.toString());
                                     myNode.setAdjacent(otherNode);
                                 }
                             }
-                        } catch (NumberFormatException n) {
-                            if (latlongStrings[1].contains(";")) {
-                                latlongStrings[1] = latlongStrings[1].substring(0, latlongStrings[1].length() - 2); //removes semicolen
+                        }
+                        catch (NumberFormatException n)
+                        {
+                            if (latlongStrings[1].contains(";"))
+                            {
+                                latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
                             }
                             myNode.addAlias(inputFile[i][j].toLowerCase().trim());
                         }
                     }
                     storage.add(myNode);
-                    Log.d("debug", ("InputFile[" + i + "][0] added a node lat: " + lat + " lng: " + log));
+                    Log.d("debug", ("Added node: "+myNode.toString()));
                 }
             }
-            Log.d("debug", "out of the if");
+            //Log.d("debug", "out of the if");
             //TODO:  Never makes it outside of the if statement above
+
 
 
         }
     }
 
-    private LatLng nodeCoords(String input) throws NumberFormatException {
+    private LatLng nodeCoords(String input) throws NumberFormatException
+    {
         double lat;
         double log;
         LatLng out;
         String[] latlongStrings;
         {
-            latlongStrings = input.split(",");
+            latlongStrings=input.split(",");
         }
-        lat = Double.parseDouble(latlongStrings[0]);
-        if (latlongStrings[1].contains(";")) {
-            latlongStrings[1] = latlongStrings[1].substring(0, latlongStrings[1].length() - 2); //removes semicolen
+        lat=Double.parseDouble(latlongStrings[0]);
+        if (latlongStrings[1].contains(";"))
+        {
+            latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
         }
-        log = Double.parseDouble(latlongStrings[1]);
-        out = new LatLng(lat, log);
+        log=Double.parseDouble(latlongStrings[1]);
+        out=new LatLng(lat,log);
         return out;
 
     }

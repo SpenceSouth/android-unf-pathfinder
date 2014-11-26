@@ -80,10 +80,12 @@ public class Node implements Comparable{
     public ArrayList<Node> getAdjacency() {return adjacency;}
     public void setAdjacent(Node otherNode)
     {
-        if (adjacency.contains(otherNode)){}
-        else{
+        if (!adjacency.contains(otherNode))
+        {
             adjacency.add(otherNode);
+            Log.d("adjacency","Added Adjacency");
             if (!otherNode.isAdjacent(this)) {otherNode.setAdjacent(this);}
+            Log.d("adjacency","Added Adjacency");
         }
     }
     public int compareTo(Object other)
@@ -113,7 +115,12 @@ public class Node implements Comparable{
 
     @Override
     public String toString(){
-        return getTitle() + " " + mLatlog.toString();
+        String next="";
+        for (Node myNeigbor:adjacency)
+        {
+            next+=("Neighbor: "+myNeigbor.getLatLog().toString()+" \n");
+        }
+        return getTitle() + " " + mLatlog.toString()+"\n"+next;
     }
 
 }
