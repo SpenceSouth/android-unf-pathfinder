@@ -48,26 +48,27 @@ public class SearchManager {
     boolean flag = false;
     private Lock lock = new ReentrantLock();
     private Semaphore semaphore = new Semaphore(1);
-    Node closest = null;
+    private Node closest = null;
+    private static ArrayList<Path> paths = new ArrayList<Path>();
 
-    private SearchManager(){
+    private SearchManager() {
         loadNodes();
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return mContext;
     }
 
-    public static SearchManager getInstance(){
-        if(mSearchManager == null){
+    public static SearchManager getInstance() {
+        if (mSearchManager == null) {
             mSearchManager = new SearchManager();
         }
         return mSearchManager;
     }
 
-    public static SearchManager getInstance(GoogleMap map, Context context){
-        Log.d("SearchManager","creating");
-        if(mSearchManager == null){
+    public static SearchManager getInstance(GoogleMap map, Context context) {
+        Log.d("SearchManager", "creating");
+        if (mSearchManager == null) {
             mMap = map;
             mMap.clear();
             mContext = context;
@@ -80,29 +81,26 @@ public class SearchManager {
         return mSearchManager;
     }
 
-    public void loadNodes(){
+    public void loadNodes() {
         //done todo designate targetfile
-       // String targetFile="rawNodestxt";
+        // String targetFile="rawNodestxt";
         String[] inputArray;
-        String[][] inputFile=new String[1][1];
+        String[][] inputFile = new String[1][1];
         ArrayList<String> inputList = new ArrayList<String>();
-        String[] latlongStrings=new String[1];
+        String[] latlongStrings = new String[1];
         double lat;
         double log;
         Node myNode;
         LatLng coordinates;
         InputStream myInputStream;
 
-        try
-        {
+        try {
 
             myInputStream = mContext.getResources().openRawResource(R.raw.rawnodes);
             Log.d("debug", "The file was found");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // Catch exception if any
-            Toast.makeText(mContext,"The file was not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "The file was not found", Toast.LENGTH_SHORT).show();
             //System.err.println("Error: " + e.getMessage()+"\n");
             Log.d("debug", "The file was not found");
 
@@ -120,9 +118,7 @@ public class SearchManager {
                     inputList.add(inputString);
                 }
             }
-        }
-        catch (IOException s)
-        {
+        } catch (IOException s) {
             Log.d("debug", "IOException");
             Log.d("debug", s.getMessage());
             Log.d("debug", s.getStackTrace().toString());
@@ -130,228 +126,152 @@ public class SearchManager {
 
 
         Log.d("debug", "processing inputs");
-            inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
-            inputFile = new String[inputArray.length][];
-            for (int i=0; i<inputArray.length; i++)
-            {
-                inputFile[i]=inputArray[i].split(";");
-            }
+        inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
+        inputFile = new String[inputArray.length][];
+        for (int i = 0; i < inputArray.length; i++) {
+            inputFile[i] = inputArray[i].split(";");
+        }
         Log.d("debug", "Lines tokenized by semicolons");
 
-            //int pants=0;
+        //int pants=0;
 
-        for (int i=0; i<inputFile.length; i++) {
+        for (int i = 0; i < inputFile.length; i++) {
             //ignore commented lines
-            if(!inputFile[i][0].equals(""));
+            if (!inputFile[i][0].equals("")) ;
             {
-                if (inputFile[i][0].substring(0, 1).equals("//"))
-                {
-                    Log.d("debug", "InputFile["+i+"][0] is empty");
+                if (inputFile[i][0].substring(0, 1).equals("//")) {
+                    Log.d("debug", "InputFile[" + i + "][0] is empty");
                     continue;
-                }
-                else
-                {
+                } else {
                     Log.d("debug", "Got a line with a node");
 
                     latlongStrings = inputFile[i][0].split("\\s+", 2);
-                    lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
-                    if (latlongStrings[1].contains(";"))
-                    {
-                        latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
+                    lat = Double.parseDouble(latlongStrings[0].substring(0, latlongStrings[0].length() - 2));//removes comma after lattitude
+                    if (latlongStrings[1].contains(";")) {
+                        latlongStrings[1] = latlongStrings[1].substring(0, latlongStrings[1].length() - 2); //removes semicolen
                     }
-                    log=Double.parseDouble(latlongStrings[1]);
-                    myNode=new Node (lat, log);
+                    log = Double.parseDouble(latlongStrings[1]);
+                    myNode = new Node(lat, log);
 
-                    for (int j=1; j<inputFile[i].length; j++)
-                    {
+                    for (int j = 1; j < inputFile[i].length; j++) {
                         //todo need a cleaner way to check if numeric or a name
-                        try
-                        {
-                            coordinates=nodeCoords(inputFile[i][j]);
-                            for (Node otherNode: storage )
-                            {
-                                if (otherNode.getLatLog().equals(coordinates)) {myNode.setAdjacent(otherNode);}
+                        try {
+                            coordinates = nodeCoords(inputFile[i][j]);
+                            for (Node otherNode : storage) {
+                                if (otherNode.getLatLog().equals(coordinates)) {
+                                    myNode.setAdjacent(otherNode);
+                                }
                             }
-                        }
-                        catch (NumberFormatException n)
-                        {
-                            if (latlongStrings[1].contains(";"))
-                            {
-                                latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
+                        } catch (NumberFormatException n) {
+                            if (latlongStrings[1].contains(";")) {
+                                latlongStrings[1] = latlongStrings[1].substring(0, latlongStrings[1].length() - 2); //removes semicolen
                             }
                             myNode.addAlias(inputFile[i][j].toLowerCase().trim());
                         }
                     }
                     storage.add(myNode);
-                    Log.d("debug", ("InputFile["+i+"][0] added a node lat: "+lat+" lng: "+log));
+                    Log.d("debug", ("InputFile[" + i + "][0] added a node lat: " + lat + " lng: " + log));
                 }
             }
             Log.d("debug", "out of the if");
             //TODO:  Never makes it outside of the if statement above
 
 
-
         }
     }
 
-    private LatLng nodeCoords(String input) throws NumberFormatException
-    {
+    private LatLng nodeCoords(String input) throws NumberFormatException {
         double lat;
         double log;
         LatLng out;
         String[] latlongStrings;
         {
-            latlongStrings=input.split(",");
+            latlongStrings = input.split(",");
         }
-        lat=Double.parseDouble(latlongStrings[0]);
-        if (latlongStrings[1].contains(";"))
-        {
-            latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
+        lat = Double.parseDouble(latlongStrings[0]);
+        if (latlongStrings[1].contains(";")) {
+            latlongStrings[1] = latlongStrings[1].substring(0, latlongStrings[1].length() - 2); //removes semicolen
         }
-        log=Double.parseDouble(latlongStrings[1]);
-        out=new LatLng(lat,log);
+        log = Double.parseDouble(latlongStrings[1]);
+        out = new LatLng(lat, log);
         return out;
 
     }
 
-    //pased from aaron's A* project
-    public static Path aStar(Node start, Node finish)
-    {
+    //passed from aaron's A* project
+    public static Path aStar(Node start, Node finish) {
 
-        Node current;
-        ArrayList<Node> closedset = new ArrayList<Node>();
-        List<Node> openset = new ArrayList<Node>();
-        ArrayList<Node> camefrom;
-        start.setG_score(0);
-        //Double fscore=start.g_score+start.distance;
-        Double gscore=0.0;
-        Double tenGscore;
-        float[] distances;
-        Path output=new Path();
-        for (Node everyNode: storage)
-        {
+        Path path = new Path();
+        path.add(start);
+        addPath(path, finish);
+        Path current = path;
 
-            everyNode.setDistance(everyNode.getDistanceTo(finish));
-            //reinitalize rawnodes
-            everyNode.setF_score(0);
-            everyNode.setG_score(0);
-            everyNode.setCameFrom(null);
-        }
-        current=start;
-        openset.add(start);
-        while (!openset.isEmpty()) {
-            //need to find collections and Comparator
-            Collections.sort(openset, new Comparator<Node>(){
-                @Override
-                public int compare(Node node1, Node node2)
-                {
-                    return node1.compareTo(node2);
+        //while(!current.isFinished(finish)){
 
-                }
-            });
+            Log.d("Optimal path", "Current.getLastNode(): " + current.getLastNode().toString());
+            Log.d("Optimal path", "Current's Adjacencies: " + current.getLastNode().getAdjacency().toString());
 
-            current=openset.get(0);
-            Log.d("debug", ("Current is: "+current.getLatLog().toString()));
-            if (current==finish)
-            {
-                //Path output;
-                output=reconstruct_path(start,  finish);
-                /*
-                Path backwardsoutput = new Path();
-                backwardsoutput.add(finish);
-                current=finish.getCameFrom();
-                while (!current.getLatLog().equals(start.getLatLog()))
-                {
-                    backwardsoutput.add(current);
-                    current=current.getCameFrom();
-                }
-                backwardsoutput.add(current);
-                //output= new Path();
-                while (!backwardsoutput.nodes.isEmpty())
-                {
-                    output.add(backwardsoutput.nodes.get(backwardsoutput.size()-1));
-                    backwardsoutput.nodes.remove(backwardsoutput.size()-1);
-                }
-                */
-                Log.d("debug", "Exiting A* from the right spot");
-                return output;
+            //Make a new path for each adjacency
+            for(int i = 0; i < current.getLastNode().getAdjacency().size(); i++){
+
+                Path p = new Path();
+
+                //Copy the old path and add the adjacency to a new one to be added to paths
+                p.copy(current);
+                Log.d("Optimal Path", current.toString());
+                p.add(current.getLastNode().getAdjacency().get(i));
+                Log.d("Optimal Path", current.toString());
+                addPath(p, finish);
             }
 
+            //Update current to the shortest path
+            current = paths.get(0);
+            Log.d("Optimal Path", current.toString());
+            Log.d("Optimal Path", "Paths size: " + paths.size());
 
-            openset.remove(current);
-            closedset.add(current);
-            for (Node neighbor: current.getAdjacency())
-            {
-                if (closedset.contains(neighbor))continue;
-                tenGscore=current.getG_score()+current.getDistanceTo(neighbor);
+        //}
 
-                if (!openset.contains(neighbor)||tenGscore<current.getG_score())
-                {
+        //Returns the optimal path
+        return paths.get(0);
 
-                    neighbor.setCameFrom(current);
-                    neighbor.setG_score(tenGscore);
-                    neighbor.setF_score(neighbor.getG_score()+neighbor.getDistance());
-                    if (!openset.contains(neighbor))
-                    {
-                        openset.add(neighbor);
-                        Log.d("debug", "Added"+neighbor.getLatLog().toString()+"to open Set");
-                        //System.out.println("Mr Bond went from "+current.toString()+" to "+neighbor.toString()+"\n Tenative score is:"+tenGscore);
-
-                    }
-                }
-
-            }
-
-        }
-
-
-        Log.d("debug", "Exiting A* from the wrong spot look at brackets"+current.getLatLog().toString());
-
-        output=reconstruct_path(start, current);
-        return output;
     }
 
-    public static Path reconstruct_path(Node start, Node finish)
-    {
+    public static Path reconstruct_path(Node start, Node finish) {
         Node current;
-        Path output=new Path();
+        Path output = new Path();
         Path backwardsoutput = new Path();
         backwardsoutput.add(finish);
-        current=finish.getCameFrom();
+        current = finish.getCameFrom();
         //what is the tolerence on LatLng.equals
-        while (!(current==start))
-        {
+        while (!(current == start)) {
             backwardsoutput.add(current);
-            current=current.getCameFrom();
+            current = current.getCameFrom();
         }
         backwardsoutput.add(current);
         //output= new Path();
-        while (!backwardsoutput.nodes.isEmpty())
-        {
-            output.add(backwardsoutput.nodes.get(backwardsoutput.size()-1));
-            backwardsoutput.nodes.remove(backwardsoutput.size()-1);
+        while (!backwardsoutput.nodes.isEmpty()) {
+            output.add(backwardsoutput.nodes.get(backwardsoutput.size() - 1));
+            backwardsoutput.nodes.remove(backwardsoutput.size() - 1);
         }
         return output;
     }
 
 
-
-
-    public void drawPath(Path path){
+    public void drawPath(Path path) {
 
         String message = "Walking time: " + path.getWalkingTime() + " minutes\n";
         message += "Distance: " + path.getPathDistance() + " miles";
 
         //Draws path on map
-        for(int i = 0; i < path.size()-1; i++){
+        for (int i = 0; i < path.size() - 1; i++) {
             line = mMap.addPolyline(new PolylineOptions()
-                    .add(path.getNode(i).getLatLog(), path.getNode(i+1).getLatLog())
+                    .add(path.getNode(i).getLatLog(), path.getNode(i + 1).getLatLog())
                     .width(8).color(Color.BLUE)
                     .geodesic(true));
         }
 
         //Display ending point with walking time and distances
-        Log.d("DrawPath",message);
+        Log.d("DrawPath", message);
 
         //TODO: Have title pull form the destination list
         marker = mMap.addMarker(new MarkerOptions()
@@ -361,23 +281,23 @@ public class SearchManager {
 
     }
 
-    public void drawPathSlowly(Path path){
+    public void drawPathSlowly(Path path) {
 
         String message = "Walking time: " + path.getWalkingTime() + " minutes\n";
         message += "Distance: " + path.getPathDistance() + " miles";
 
         //Draws path on map
-        for(int i = 0; i < path.size()-1; i++){
+        for (int i = 0; i < path.size() - 1; i++) {
 
-            draw(path.getNode(i).getLatLog(), path.getNode(i+1).getLatLog());
+            draw(path.getNode(i).getLatLog(), path.getNode(i + 1).getLatLog());
 
-            Log.d("Map","Drew first line" + i);
+            Log.d("Map", "Drew first line" + i);
         }
 
         //Display ending point with walking time and distances
-        Log.d("DrawPath",message);
+        Log.d("DrawPath", message);
 
-        Log.d("Map","About to enter marker");
+        Log.d("Map", "About to enter marker");
 
         //TODO: Have title pull form the destination list
         marker = mMap.addMarker(new MarkerOptions()
@@ -385,11 +305,11 @@ public class SearchManager {
                 .title("Destination: " + path.getEndingNode().getTitle())
                 .snippet(message));
 
-        Log.d("Map","Exited marker");
+        Log.d("Map", "Exited marker");
 
     }
 
-    private void draw(LatLng a, LatLng b){
+    private void draw(LatLng a, LatLng b) {
 
         mMap.addPolyline(new PolylineOptions()
                 .add(a, b)
@@ -397,18 +317,17 @@ public class SearchManager {
                 .geodesic(true));
         try {
             Thread.sleep(200);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             Toast.makeText(mContext, "No sleep for the weary", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    public void clearMap(){
+    public void clearMap() {
         mMap.clear();
     }
 
-    public void openSearchMenu(final Activity activity){
+    public void openSearchMenu(final Activity activity) {
 
         final View inflatedView = activity.getLayoutInflater().inflate(R.layout.search_menu, null);
 
@@ -419,26 +338,26 @@ public class SearchManager {
 
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(activity)
-            .setTitle("Destination Search")
-            .setMessage("Enter in your starting origin and your destination to calculate the route")
-            .setView(inflatedView)
-            .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                .setTitle("Destination Search")
+                .setMessage("Enter in your starting origin and your destination to calculate the route")
+                .setView(inflatedView)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                }
-            })
-            .setPositiveButton("Let's go!", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setPositiveButton("Let's go!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                    //Starts the search with the input values
-                    Log.d("TERM","" + storage.size());
+                        //Starts the search with the input values
+                        Log.d("TERM", "" + storage.size());
 
-                    dialog.dismiss();
-                    startSearch(findSearchTerm(originInput.getText().toString().toLowerCase().trim()), findSearchTerm(destinationInput.getText().toString().toLowerCase().trim()));
-                }
-            });
+                        dialog.dismiss();
+                        startSearch(findSearchTerm(originInput.getText().toString().toLowerCase().trim()), findSearchTerm(destinationInput.getText().toString().toLowerCase().trim()));
+                    }
+                });
 
         final AlertDialog alert = dialog.create();
 
@@ -452,10 +371,10 @@ public class SearchManager {
                 LatLng currentPosition = LocationUtils.getCurrentPosition(mContext);
 
                 //Find the closest node
-                for(Node node : storage){
+                for (Node node : storage) {
                     distance = LocationUtils.calculateDistance(node.getLatLog().latitude, node.getLatLog().longitude, currentPosition.latitude, currentPosition.longitude);
 
-                    if(distance < shortestDistance){
+                    if (distance < shortestDistance) {
                         shortestDistance = distance;
                         closest = node;
                     }
@@ -465,7 +384,6 @@ public class SearchManager {
                 originInput.setText("#" + currentPosition.toString());
 
 
-
             }
         });
 
@@ -473,15 +391,15 @@ public class SearchManager {
 
     }
 
-    private Node findSearchTerm(String term){
+    private Node findSearchTerm(String term) {
 
-        if(term.contains("#") && closest != null){
+        if (term.contains("#") && closest != null) {
             return closest;
         }
 
-        for(Node node : storage){
+        for (Node node : storage) {
             //Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
-            if(node.getAliases().contains(term)){
+            if (node.getAliases().contains(term)) {
                 //Log.d("findSearchTerm","Match found");
                 return node;
             }
@@ -492,18 +410,19 @@ public class SearchManager {
         return null;
     }
 
-    /**After path is created by  Astar */
-    private void startSearch(Node start, Node end){
-        if(start == null || end == null){
+    /**
+     * After path is created by  Astar
+     */
+    private void startSearch(Node start, Node end) {
+        if (start == null || end == null) {
             Toast.makeText(mContext, "Search failed", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             generatePath(start, end);
         }
     }
 
     //TODO: For debugging purposes only
-    private static void addDebuggingNodes(){
+    private static void addDebuggingNodes() {
         Node starting = new Node(30.271483, -81.509146);
         starting.addAlias("Student Union");
         starting.addAlias("SU");
@@ -554,7 +473,7 @@ public class SearchManager {
     }
 
     //TODO: For debugging purposes only
-    private Path createFakePath(){
+    private Path createFakePath() {
 
         Path path = new Path();
         path.add(new LatLng(30.271483, -81.509146));
@@ -602,18 +521,18 @@ public class SearchManager {
     }
 
 
-    private void generatePath(Node start, Node end){
+    private void generatePath(Node start, Node end) {
 
         //Clear the map before drawing over it again.
         mMap.clear();
 
         final Path path = aStar(start, end);             //TODO: Replace createFakePath with the call with the path from A*(start, end)
-        Log.d("generatePath",path.toString());
-        Log.d("generatePath","Size: " + path.size());
+        Log.d("generatePath", path.toString());
+        Log.d("generatePath", "Size: " + path.size());
         /*new Thread(){
             @Override
             public void run(){*/
-                drawPath(path);
+        drawPath(path);
             /*}
         }.run();*/
 
@@ -622,4 +541,36 @@ public class SearchManager {
         MapCenteringUtils.mapMoveAndZoomTo(mMap, midpoint, 18);
     }
 
+
+    private static void addPath(Path path, Node goal) {
+
+        int size = paths.size();
+
+        if (paths.size() == 0) {
+            paths.add(path);
+        }
+        else {
+            for (int i = 0; i < size; i++) {
+                if (path.getHeuristicsDistance(goal) < paths.get(i).getHeuristicsDistance(goal)) {
+                    if (i == 0) {
+                        paths.add(0, path);
+                        return;
+                    } else {
+                        paths.add(i, path);
+                        return;
+                    }
+                } else if (path.getHeuristicsDistance(goal) == paths.get(i).getHeuristicsDistance(goal)) {
+                    paths.add(i, path);
+                    return;
+                }
+                //Is the last path to compare against
+                else if (i == size - 1) {
+                    paths.add(path);
+                    return;
+                }
+            }
+        }
+
+
+    }
 }
