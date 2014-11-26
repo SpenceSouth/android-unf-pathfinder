@@ -581,18 +581,34 @@ public class SearchManager {
 
         final Path path = aStar(start, end);
 
-        Log.d("generatePath", path.toString());
-        Log.d("generatePath", "Size: " + path.size());
-        /*new Thread(){
-            @Override
-            public void run(){*/
         drawPath(path);
-            /*}
-        }.run();*/
 
         //Center path if necessary
         LatLng midpoint = LocationUtils.getMidpoint(start.getLatLog(), end.getLatLog());
-        MapCenteringUtils.mapMoveAndZoomTo(mMap, midpoint, 18);
+
+        Log.d("Zoom","h(n): " + LocationUtils.calculateDistance(start, end));
+
+        int zoomLevel = 18;
+        double distance = LocationUtils.calculateDistance(start, end);
+
+        if(distance < .20){
+            zoomLevel = 18;
+        }
+        else if(distance > .65 && distance < .899){
+            zoomLevel = 16;
+        }
+        else if(distance > .9 && distance < 1.499){
+            zoomLevel = 15;
+        }
+        else if(distance > 1.5){
+            zoomLevel = 14;
+        }
+        else {
+            zoomLevel = 17;
+        }
+
+
+        MapCenteringUtils.mapMoveAndZoomTo(mMap, midpoint, zoomLevel);
     }
 
 
