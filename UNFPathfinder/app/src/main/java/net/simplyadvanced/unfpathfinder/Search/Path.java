@@ -74,6 +74,9 @@ public class Path {
         for (Node node : nodes){
             result += node.toString() + ", ";
         }
+
+        result += " " + getPathDistance();
+
         return result;
     }
 
@@ -103,5 +106,14 @@ public class Path {
         for(int i = 0; i < path.size(); i++){
             nodes.add(new Node(path.getNode(i).getLatLog()));
         }
+    }
+
+    public boolean contains(Node node){
+        for(int i = 0; i < nodes.size(); i++){
+            if(nodes.get(i).toString().equals(node.toString())){
+                return true;
+            }
+        }
+        return false;
     }
 }

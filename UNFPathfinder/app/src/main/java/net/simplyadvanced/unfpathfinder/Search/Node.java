@@ -23,6 +23,8 @@ public class Node implements Comparable{
     private double f_score;
     private Node cameFrom;
     private double distance;
+    private String[] rawAdjacency;
+    private int number;
 
 
     public Node(){
@@ -46,7 +48,7 @@ public class Node implements Comparable{
     }
 
     public Node(LatLng latLng){
-        Log.d("Node",this.toString());
+        //Log.d("Node",this.toString());
         mLatlog = latLng;
     }
 
@@ -78,6 +80,7 @@ public class Node implements Comparable{
     }
 
     public ArrayList<Node> getAdjacency() {return adjacency;}
+
     public void setAdjacent(Node otherNode)
     {
         if (!adjacency.contains(otherNode))
@@ -122,5 +125,12 @@ public class Node implements Comparable{
         }
         return getTitle() + " " + mLatlog.toString()+"\n"+next;
     }
+
+    public void setRawAdjacency (String[] input) {rawAdjacency=input;}
+
+    public String[] getRawAdjacency () {return rawAdjacency;}
+
+    public void setNumber (int input) {number=input;}
+    public int getNumber() {return number;}
 
 }

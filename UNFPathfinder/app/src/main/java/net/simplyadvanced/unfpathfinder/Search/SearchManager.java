@@ -163,13 +163,15 @@ public class SearchManager {
                     Log.d("debug", "Got a line with a node");
 
                     latlongStrings = inputFile[i][0].split("\\s+", 2);
-                    lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-2));//removes comma after lattitude
+                    lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-1));//removes comma after lattitude
                     if (latlongStrings[1].contains(";"))
                     {
                         latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
                     }
                     log=Double.parseDouble(latlongStrings[1]);
                     myNode=new Node (lat, log);
+                    myNode.setRawAdjacency(inputFile[i]);
+                    myNode.setNumber(i);//this may be useless after troubleshooting
 
                     for (int j=1; j<inputFile[i].length; j++)
                     {
@@ -188,10 +190,7 @@ public class SearchManager {
                         }
                         catch (NumberFormatException n)
                         {
-                            if (latlongStrings[1].contains(";"))
-                            {
-                                latlongStrings[1]=latlongStrings[1].substring(0,latlongStrings[1].length()-2); //removes semicolen
-                            }
+
                             myNode.addAlias(inputFile[i][j].toLowerCase().trim());
                         }
                     }
@@ -204,6 +203,21 @@ public class SearchManager {
 
 
 
+        }
+
+        for (Node oneNode: storage)//Ugly ugly hack
+        {
+            for (String oneToken: oneNode.getRawAdjacency())
+            {
+                for (Node anotherNode: storage)
+                {
+                    if (oneToken.equals(anotherNode.getRawAdjacency()[0]))
+                    {
+                        oneNode.setAdjacent(anotherNode);
+                        anotherNode.setAdjacent(oneNode);
+                    }
+                }
+            }
         }
     }
 
@@ -234,14 +248,20 @@ public class SearchManager {
         path.add(start);
         addPath(path, finish);
         Path current = path;
+        //ArrayList<Node> ad;
+        int count = 0;
 
-        //while(!current.isFinished(finish)){
+        while(!current.isFinished(finish)){
 
-            Log.d("Optimal path", "Current.getLastNode(): " + current.getLastNode().toString());
-            Log.d("Optimal path", "Current's Adjacencies: " + current.getLastNode().getAdjacency().toString());
+            //Log.d("Optimal path", "Current.getLastNode(): " + current.getLastNode().toString());
+            //Log.d("Optimal path", "Current's Adjacencies: " + current.getLastNode().getAdjacency().toString());
+            //ad = current.getLastNode().getAdjacency();
+            //Log.d("Optimal path", "Alt Current's Adjacencies: " + ad.toString());
 
             //Make a new path for each adjacency
             for(int i = 0; i < current.getLastNode().getAdjacency().size(); i++){
+
+                if(current.contains(current.getLastNode().getAdjacency().get(i))) continue;
 
                 Path p = new Path();
 
@@ -258,7 +278,9 @@ public class SearchManager {
             Log.d("Optimal Path", current.toString());
             Log.d("Optimal Path", "Paths size: " + paths.size());
 
-        //}
+            if(count++ == 5) break;
+
+        }
 
         //Returns the optimal path
         return paths.get(0);
