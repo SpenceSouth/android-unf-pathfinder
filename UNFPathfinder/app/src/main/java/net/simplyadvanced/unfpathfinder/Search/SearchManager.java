@@ -2,10 +2,12 @@ package net.simplyadvanced.unfpathfinder.Search;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.BaseKeyListener;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -56,7 +59,8 @@ public class SearchManager {
     private static Activity mActivity;
 
     private SearchManager(){
-        loadNodes();
+        //loadNodes();
+        new LoadNodesTask().execute();
     }
 
     public Context getContext(){
@@ -661,5 +665,41 @@ public class SearchManager {
 
         return false;
 
+    }
+
+    /**Loads nodes in a background thread */
+    class LoadNodesTask extends AsyncTask<Void, Integer, Void> {
+
+        ProgressDialog progress = new ProgressDialog(mContext);
+
+
+        @Override
+        protected void onPreExecute() {
+
+            // prepare for a progress bar dialog
+            progress = new ProgressDialog(mActivity);
+            progress.setMessage("Loading");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            loadNodes();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progress.dismiss();
+        }
     }
 }

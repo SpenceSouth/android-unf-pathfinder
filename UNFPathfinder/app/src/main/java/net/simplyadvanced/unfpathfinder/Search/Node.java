@@ -53,7 +53,7 @@ public class Node implements Comparable{
 
     public Node(double lat, double lng){
         mLatlog = new LatLng(lat, lng);
-        Log.d("Node",this.toString());
+        //Log.d("Node",this.toString());
     }
 
     public LatLng getLatLog(){
@@ -85,9 +85,9 @@ public class Node implements Comparable{
         if (!adjacency.contains(otherNode))
         {
             adjacency.add(otherNode);
-            Log.d("adjacency","Added Adjacency");
+            //Log.d("adjacency","Added Adjacency");
             if (!otherNode.isAdjacent(this)) {otherNode.setAdjacent(this);}
-            Log.d("adjacency","Added Adjacency");
+            //Log.d("adjacency","Added Adjacency");
         }
     }
     public int compareTo(Object other)
