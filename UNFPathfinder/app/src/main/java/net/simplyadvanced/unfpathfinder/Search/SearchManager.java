@@ -79,9 +79,6 @@ public class SearchManager {
             mActivity = activity;
             mSearchManager = new SearchManager();
 
-            //TODO: Delete this when done with debugging
-            //addDebuggingNodes();
-
         }
         return mSearchManager;
     }
@@ -103,14 +100,14 @@ public class SearchManager {
         {
 
             myInputStream = mContext.getResources().openRawResource(R.raw.rawnodes);
-            Log.d("debug", "The file was found");
+            //Log.d("debug", "The file was found");
         }
         catch (Exception e)
         {
             // Catch exception if any
             Toast.makeText(mContext,"The file was not found", Toast.LENGTH_SHORT).show();
             //System.err.println("Error: " + e.getMessage()+"\n");
-            Log.d("debug", "The file was not found");
+           // Log.d("debug", "The file was not found");
 
             return;
         }
@@ -129,13 +126,13 @@ public class SearchManager {
         }
         catch (IOException s)
         {
-            Log.d("debug", "IOException");
+           /* Log.d("debug", "IOException");
             Log.d("debug", s.getMessage());
-            Log.d("debug", s.getStackTrace().toString());
+            Log.d("debug", s.getStackTrace().toString());*/
         }
 
 
-        Log.d("debug", "processing inputs");
+        //Log.d("debug", "processing inputs");
         inputArray = (String[]) inputList.toArray(new String[inputList.size()]);
         inputFile = new String[inputArray.length][];
         for (int i=0; i<inputArray.length; i++)
@@ -148,7 +145,7 @@ public class SearchManager {
                 test+=inputFile[i][j]+"/";
 
             }
-            Log.d("debug", "Lines tokenized by semicolons Line is: "+test);
+            //Log.d("debug", "Lines tokenized by semicolons Line is: "+test);
 
         }
 
@@ -160,12 +157,12 @@ public class SearchManager {
             {
                 if (inputFile[i][0].substring(0, 1).equals("//"))
                 {
-                    Log.d("debug", "InputFile["+i+"][0] is empty");
+                    //Log.d("debug", "InputFile["+i+"][0] is empty");
                     continue;
                 }
                 else
                 {
-                    Log.d("debug", "Got a line with a node");
+                    //Log.d("debug", "Got a line with a node");
 
                     latlongStrings = inputFile[i][0].split("\\s+", 2);
                     lat=Double.parseDouble(latlongStrings[0].substring(0,latlongStrings[0].length()-1));//removes comma after lattitude
@@ -180,7 +177,7 @@ public class SearchManager {
 
                     for (int j=1; j<inputFile[i].length; j++)
                     {
-                        //todo need a cleaner way to check if numeric or a name
+
                         try
                         {
                             coordinates=nodeCoords(inputFile[i][j]);
@@ -188,7 +185,7 @@ public class SearchManager {
                             {
                                 if (otherNode.getLatLog().toString().equals(coordinates.toString()))
                                 {
-                                    Log.d("debug", "Ajacency:"+myNode.toString()+" "+otherNode.toString());
+                                    //Log.d("debug", "Ajacency:"+myNode.toString()+" "+otherNode.toString());
                                     myNode.setAdjacent(otherNode);
                                 }
                             }
@@ -200,11 +197,10 @@ public class SearchManager {
                         }
                     }
                     storage.add(myNode);
-                    Log.d("debug", ("Added node: "+myNode.toString()));
+                    //Log.d("debug", ("Added node: "+myNode.toString()));
                 }
             }
             //Log.d("debug", "out of the if");
-            //TODO:  Never makes it outside of the if statement above
 
 
 
@@ -385,10 +381,9 @@ public class SearchManager {
         //Display ending point with walking time and distances
         Log.d("DrawPath", message);
 
-        //TODO: Have title pull form the destination list
         marker = mMap.addMarker(new MarkerOptions()
                 .position(path.getEndingNode().getLatLog())
-                .title("Destination: " + path.getEndingNode().getTitle())
+                .title("Destination: " + path.getEndingNode().getTitle().toUpperCase())
                 .snippet(message));
 
     }
@@ -574,106 +569,6 @@ public class SearchManager {
         }
     }
 
-    //TODO: For debugging purposes only
-    private static void addDebuggingNodes() {
-        Node starting = new Node(30.271483, -81.509146);
-        starting.addAlias("Student Union");
-        starting.addAlias("SU");
-        storage.add(starting);
-        storage.add(new Node(30.271483, -81.509146));
-        storage.add(new Node(30.271441, -81.509206));
-        storage.add(new Node(30.271413, -81.509300));
-        storage.add(new Node(30.271343, -81.509472));
-        storage.add(new Node(30.271298, -81.509602));
-        storage.add(new Node(30.271284, -81.509614));
-        storage.add(new Node(30.271270, -81.509663));
-        storage.add(new Node(30.271224, -81.509747));
-        storage.add(new Node(30.271165, -81.509745));
-        storage.add(new Node(30.271113, -81.509756));
-        storage.add(new Node(30.271075, -81.509766));
-        storage.add(new Node(30.271002, -81.509761));
-        storage.add(new Node(30.270968, -81.509761));
-        storage.add(new Node(30.270902, -81.509747));
-        storage.add(new Node(30.270857, -81.509715));
-        storage.add(new Node(30.270811, -81.509680));
-        storage.add(new Node(30.270751, -81.509633));
-        storage.add(new Node(30.270699, -81.509568));
-        storage.add(new Node(30.270662, -81.509523));
-        storage.add(new Node(30.270677, -81.509533));
-        storage.add(new Node(30.270683, -81.509540));
-        storage.add(new Node(30.270648, -81.509523));
-        storage.add(new Node(30.270614, -81.509463));
-        storage.add(new Node(30.270610, -81.509442));
-        storage.add(new Node(30.270534, -81.509370));
-        storage.add(new Node(30.270435, -81.509304));
-        storage.add(new Node(30.270349, -81.509274));
-        storage.add(new Node(30.270252, -81.509244));
-        storage.add(new Node(30.270186, -81.509260));
-        storage.add(new Node(30.270007, -81.509269));
-        storage.add(new Node(30.269871, -81.509288));
-        storage.add(new Node(30.269700, -81.509272));
-        storage.add(new Node(30.269694, -81.509272));
-        storage.add(new Node(30.269688, -81.509279));
-        storage.add(new Node(30.269549, -81.509244));
-        storage.add(new Node(30.269505, -81.509211));
-        storage.add(new Node(30.269459, -81.509104));
-        storage.add(new Node(0.269473, -81.509017));
-        Node node = new Node(30.269475, -81.508936);
-        node.addAlias("Thomas G Carpenter Library");
-        node.addAlias("Lib");
-        node.addAlias("Library");
-        storage.add(node);
-    }
-
-    //TODO: For debugging purposes only
-    private Path createFakePath() {
-
-        Path path = new Path();
-        path.add(new LatLng(30.271483, -81.509146));
-        path.add(new LatLng(30.271441, -81.509206));
-        path.add(new LatLng(30.271413, -81.509300));
-        path.add(new LatLng(30.271343, -81.509472));
-        path.add(new LatLng(30.271298, -81.509602));
-        path.add(new LatLng(30.271284, -81.509614));
-        path.add(new LatLng(30.271270, -81.509663));
-        path.add(new LatLng(30.271224, -81.509747));
-        path.add(new LatLng(30.271165, -81.509745));
-        path.add(new LatLng(30.271113, -81.509756));
-        path.add(new LatLng(30.271075, -81.509766));
-        path.add(new LatLng(30.271002, -81.509761));
-        path.add(new LatLng(30.270968, -81.509761));
-        path.add(new LatLng(30.270902, -81.509747));
-        path.add(new LatLng(30.270857, -81.509715));
-        path.add(new LatLng(30.270811, -81.509680));
-        path.add(new LatLng(30.270751, -81.509633));
-        path.add(new LatLng(30.270699, -81.509568));
-        path.add(new LatLng(30.270662, -81.509523));
-        path.add(new LatLng(30.270677, -81.509533));
-        path.add(new LatLng(30.270683, -81.509540));
-        path.add(new LatLng(30.270648, -81.509523));
-        path.add(new LatLng(30.270614, -81.509463));
-        path.add(new LatLng(30.270610, -81.509442));
-        path.add(new LatLng(30.270534, -81.509370));
-        path.add(new LatLng(30.270435, -81.509304));
-        path.add(new LatLng(30.270349, -81.509274));
-        path.add(new LatLng(30.270252, -81.509244));
-        path.add(new LatLng(30.270186, -81.509260));
-        path.add(new LatLng(30.270007, -81.509269));
-        path.add(new LatLng(30.269871, -81.509288));
-        path.add(new LatLng(30.269700, -81.509272));
-        path.add(new LatLng(30.269694, -81.509272));
-        path.add(new LatLng(30.269688, -81.509279));
-        path.add(new LatLng(30.269549, -81.509244));
-        path.add(new LatLng(30.269505, -81.509211));
-        path.add(new LatLng(30.269459, -81.509104));
-        path.add(new LatLng(30.269473, -81.509017));
-        Node node = new Node(30.269475, -81.508936);
-        node.addAlias("Thomas G Carpenter Library");
-        path.add(node);
-        return path;
-    }
-
-
     private void generatePath(Node start, Node end) {
 
         //Clear the map before drawing over it again.
@@ -684,7 +579,7 @@ public class SearchManager {
             Toast.makeText(mContext, "One does not simply walk into Mordor", Toast.LENGTH_SHORT).show();
         }
 
-        final Path path = aStar(start, end);             //TODO: Replace createFakePath with the call with the path from A*(start, end)
+        final Path path = aStar(start, end);
 
         Log.d("generatePath", path.toString());
         Log.d("generatePath", "Size: " + path.size());
