@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Location;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.BaseKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -244,6 +247,8 @@ public class SearchManager {
     //passed from aaron's A* project
     public static Path aStar(Node start, Node finish) {
 
+        int numberOfPaths = 0;
+
         //Reset ArrayList
         paths = new ArrayList<Path>();
 
@@ -251,10 +256,7 @@ public class SearchManager {
         path.add(start);
         addPath(path, finish);
         Path current = path;
-        //ArrayList<Node> ad;
         int count = 0;
-
-        Log.d("Optimal Path","Goal node is " + finish.getNumber());
 
         while(!current.isFinished(finish)){
 
@@ -268,9 +270,9 @@ public class SearchManager {
                 //Copy the old path and add the adjacency to a new one to be added to paths
                 p.copy(current);
                 p.add(current.getLastNode().getAdjacency().get(i));
-                //Log.d("Optimal Path", "Added " + current.getLastNode().getAdjacency().get(i) + " to the path " + p.toString());
 
                 addPath(p, finish);
+                numberOfPaths++;
             }
 
             //Remove the path that was just expanded
@@ -278,18 +280,17 @@ public class SearchManager {
 
             //Update current to the shortest path
             current = paths.get(0);
-            //Log.d("Optimal Path", "Shorest path is " + current.toString());
-            Log.d("Optimal Path", paths.toString());
-
-            //if(count++ == 5) break;
 
         }
+
+        Log.d("Performance","Paths generated: " + numberOfPaths);
 
         //Returns the optimal path
         return paths.get(0);
 
     }
 
+    @Deprecated
     public static Path reconstruct_path(Node start, Node finish) {
         Node current;
         Path output = new Path();
@@ -389,6 +390,50 @@ public class SearchManager {
         final EditText destinationInput = (EditText) inflatedView.findViewById(R.id.destination_input);
         final EditText originInput = (EditText) inflatedView.findViewById(R.id.origin_input);
         final Button gpsButton = (Button) inflatedView.findViewById(R.id.calculate_origin_button);
+
+        originInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!checkEntry(destinationInput.getText().toString().toLowerCase())){
+                    destinationInput.setTextColor(Color.RED);
+                }
+                else{
+                    destinationInput.setTextColor(Color.GREEN);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        destinationInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!checkEntry(destinationInput.getText().toString().toLowerCase())){
+                    destinationInput.setTextColor(Color.RED);
+                }
+                else{
+                    destinationInput.setTextColor(Color.GREEN);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(activity)
@@ -625,6 +670,21 @@ public class SearchManager {
             }
         }
 
+
+    }
+
+    private boolean checkEntry(String input){
+
+        for (Node node : storage) {
+            //Log.d("findSearchTerm","Checking " + node.getAliases().toString() + " for match to " + term);
+            if (node.getAliases().contains(input)) {
+                Log.d("CheckEntry","Match found for " + input);
+                return true;
+            }
+        }
+        Log.d("CheckEntry","Match not found for " + input);
+
+        return false;
 
     }
 }
