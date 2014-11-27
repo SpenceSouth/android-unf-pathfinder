@@ -15,7 +15,7 @@
         android:id="@+id/search_button"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:background="@drawable/ic_search_icon"
+        android:background="@drawable/button_selector"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

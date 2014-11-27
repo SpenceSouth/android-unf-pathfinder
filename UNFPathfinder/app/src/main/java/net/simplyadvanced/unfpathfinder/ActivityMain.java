@@ -192,11 +192,22 @@ public class ActivityMain extends FragmentActivity {
 
         //Get values from EditText fields
         final Button search = (Button) findViewById(R.id.search_button);
+
+        //Opens menu on click
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSearchManager.openSearchMenu();
             }
         });
+
+        //Changes button color on focus
+        search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                search.setBackgroundResource(R.drawable.ic_search_icon_pressed);
+            }
+        });
+
     }
 }
