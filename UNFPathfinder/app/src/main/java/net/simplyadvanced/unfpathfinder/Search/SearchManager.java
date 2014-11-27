@@ -459,7 +459,7 @@ public class SearchManager {
                     originInput.setTextColor(Color.RED);
                 }
                 else{
-                    originInput.setTextColor(Color.GREEN);
+                    originInput.setTextColor(Color.rgb(102, 153, 0));
                 }
             }
 
@@ -481,7 +481,7 @@ public class SearchManager {
                     destinationInput.setTextColor(Color.RED);
                 }
                 else{
-                    destinationInput.setTextColor(Color.GREEN);
+                    destinationInput.setTextColor(Color.rgb(102, 153, 0));
                 }
             }
 
