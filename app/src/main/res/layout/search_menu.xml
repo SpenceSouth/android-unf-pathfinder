@@ -36,4 +36,29 @@
         android:id="@+id/calculate_origin_button"
         android:text="Calculate Origin using GPS"/>
 
+    <!--<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton android:id="@+id/radio_slow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Slow"
+            android:onClick="onRadioButtonClicked1"/>
+
+        <RadioButton android:id="@+id/radio_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medium"
+            android:onClick="onRadioButtonClicked2"/>
+
+        <RadioButton android:id="@+id/radio_fast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fast"
+            android:checked="true"
+            android:onClick="onRadioButtonClicked3"/>
+    </RadioGroup>-->
+
 </LinearLayout>

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -666,6 +667,27 @@ public class SearchManager {
         return false;
 
     }
+
+    /*public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_slow:
+                if (checked)
+                    Toast.makeText(mContext, "Slow", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.radio_medium:
+                if (checked)
+                    Toast.makeText(mContext, "Medium", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.radio_fast:
+                if (checked)
+                    Toast.makeText(mContext, "Fast", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }*/
 
     /**Loads nodes in a background thread */
     class LoadNodesTask extends AsyncTask<Void, Integer, Void> {

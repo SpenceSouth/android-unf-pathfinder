@@ -14,7 +14,9 @@ public class Path {
 
     //Decs
     ArrayList<Node> nodes = new ArrayList<Node>();
-    private final double WALKING_SPEED = 5;     //in miles-per-hour
+    private final double WALKING_SPEED_FAST = 5;     //in miles-per-hour
+    private final double WALKING_SPEED_NORMAL = 4;     //in miles-per-hour
+    private final double WALKING_SPEED_SLOW = 3;     //in miles-per-hour
 
     public Path(){
 
@@ -64,7 +66,7 @@ public class Path {
     /**Returns walking time in minutes*/
     public double getWalkingTime(){
         DecimalFormat df = new DecimalFormat("#.##");
-        double time = (60*(getPathDistance()/WALKING_SPEED));
+        double time = (60*(getPathDistance()/ WALKING_SPEED_FAST));
 
         return Double.parseDouble(df.format(time));
     }
