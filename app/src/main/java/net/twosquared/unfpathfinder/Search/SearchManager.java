@@ -1,4 +1,4 @@
-package net.simplyadvanced.unfpathfinder.Search;
+package net.twosquared.unfpathfinder.Search;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,17 +6,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.BaseKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -26,9 +22,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import net.simplyadvanced.unfpathfinder.MapCenteringUtils;
-import net.simplyadvanced.unfpathfinder.R;
-import net.simplyadvanced.unfpathfinder.Utils.LocationUtils;
+import net.twosquared.unfpathfinder.MapCenteringUtils;
+import net.twosquared.unfpathfinder.R;
+import net.twosquared.unfpathfinder.Utils.LocationUtils;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

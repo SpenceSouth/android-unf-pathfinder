@@ -1,4 +1,4 @@
-package net.simplyadvanced.unfpathfinder.Settings;
+package net.twosquared.unfpathfinder.Settings;
 
 public class UserPrefs extends AbstractPrefs {
 

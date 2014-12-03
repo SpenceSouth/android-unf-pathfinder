@@ -1,8 +1,8 @@
-package net.simplyadvanced.unfpathfinder.Search;
+package net.twosquared.unfpathfinder.Search;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import net.simplyadvanced.unfpathfinder.Utils.LocationUtils;
+import net.twosquared.unfpathfinder.Utils.LocationUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package net.simplyadvanced.unfpathfinder;
+package net.twosquared.unfpathfinder;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

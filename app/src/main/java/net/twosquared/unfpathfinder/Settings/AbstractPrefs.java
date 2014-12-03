@@ -1,11 +1,10 @@
-package net.simplyadvanced.unfpathfinder.Settings;
+package net.twosquared.unfpathfinder.Settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import net.simplyadvanced.unfpathfinder.Search.SearchManager;
+import net.twosquared.unfpathfinder.Search.SearchManager;
 
 
 public abstract class AbstractPrefs {

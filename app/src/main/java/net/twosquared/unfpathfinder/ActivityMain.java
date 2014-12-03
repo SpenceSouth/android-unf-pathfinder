@@ -1,27 +1,22 @@
-package net.simplyadvanced.unfpathfinder;
+package net.twosquared.unfpathfinder;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import net.simplyadvanced.unfpathfinder.Search.Node;
-import net.simplyadvanced.unfpathfinder.Search.Path;
-import net.simplyadvanced.unfpathfinder.Search.SearchManager;
-import net.simplyadvanced.unfpathfinder.Settings.UserPrefs;
+import net.twosquared.unfpathfinder.Search.Node;
+import net.twosquared.unfpathfinder.Search.Path;
+import net.twosquared.unfpathfinder.Search.SearchManager;
+import net.twosquared.unfpathfinder.Settings.UserPrefs;
 
 public class ActivityMain extends FragmentActivity {
 

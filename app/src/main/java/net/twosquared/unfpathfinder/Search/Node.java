@@ -1,7 +1,4 @@
-package net.simplyadvanced.unfpathfinder.Search;
-
-import android.location.Location;
-import android.util.Log;
+package net.twosquared.unfpathfinder.Search;
 
 import com.google.android.gms.maps.model.LatLng;
 

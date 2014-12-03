@@ -1,12 +1,12 @@
-package net.simplyadvanced.unfpathfinder.Utils;
+package net.twosquared.unfpathfinder.Utils;
 
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import net.simplyadvanced.unfpathfinder.MapCenteringUtils;
-import net.simplyadvanced.unfpathfinder.Search.Node;
-import net.simplyadvanced.unfpathfinder.Search.Path;
+import net.twosquared.unfpathfinder.MapCenteringUtils;
+import net.twosquared.unfpathfinder.Search.Node;
+import net.twosquared.unfpathfinder.Search.Path;
 
 /**
  * Created by Spence on 11/12/2014.
