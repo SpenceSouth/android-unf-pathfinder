@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">UNF Pathfinder</string>
-    <string name="title_activity_activity_main">UNF Pathfinder</string>
-    <string name="eula_agreement">LICENSED APPLICATION END USER LICENSE AGREEMENT\n\n The user assumes all risks, reponsibility
-        and consequences of using this application.  Please use this application only when it is safe to do so.</string>
-
-</resources>
